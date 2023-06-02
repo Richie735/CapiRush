@@ -9,21 +9,45 @@ import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 // ------------------------------------
 
 // Init Setup -------------------------
-var camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  10000
-);
-var camPos = 1;
 const scene = new THREE.Scene();
 const render = new THREE.WebGLRenderer({
   canvas: document.querySelector("#bg"),
 });
+// ------------------------------------
+
+// Resize Handler ---------------------
+
+const sizes = {
+  width: window.innerWidth,
+  height: window.innerHeight,
+}
+
+window.addEventListener("resize", () => {
+  // Update Sizes
+  sizes.width = window.innerWidth;
+  sizes.height = window.innerHeight;
+
+  // Update Camera
+  camera.aspect = sizes.width / sizes.height;
+  camera.updateProjectionMatrix();
+
+  // Update Renderer
+  render.setSize(sizes.width, sizes.height);
+  render.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+})
 
 // ------------------------------------
 
+
 // Camera Setup -----------------------
+var camera = new THREE.PerspectiveCamera(
+  75,
+  sizes.width / sizes.height,
+  0.1,
+  100
+);
+var camPos = 1;
+
 function camSetup() {
   camera.position.set(0, 0, 5.3);
 }
