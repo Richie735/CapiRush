@@ -270,7 +270,6 @@ ttfLoader.load("assets/fonts/Bungee-Regular.ttf", (json) => {
 
 // ------------------------------------
 
-
 // Add Objects ------------------------
 
 let loadedModel;
@@ -288,28 +287,65 @@ tree.position.x = 2;
 
 // ------------------------------------
 
+// Out Obj Moving ---------------------
+var objSpeed = 0.1;
+var randomPos;
 
-// Moving -----------------------------
+function posOutObj(outObj) {
+  randomPos = Math.floor(Math.random() * 2);
+
+  if (randomPos == 1) {
+    switch (outObj) {
+      case "poste":
+        loadedModel.scene.position.z = -10;
+        loadedModel.scene.position.x = -2.3;
+        pointLight.position.z = -11.3;
+        pointLight.position.x = -3;
+        break;
+      case "tree":
+        tree.position.z = -15;
+        tree.position.x = -2;
+        break;
+    }
+  } else {
+    switch (outObj) {
+      case "poste":
+        loadedModel.scene.position.z = -10;
+        loadedModel.scene.position.x = 2.3;
+        pointLight.position.z = -11.3;
+        pointLight.position.x = 3;
+        break;
+      case "tree":
+        tree.position.z = -15;
+        tree.position.x = 2;
+        break;
+    }
+  }
+}
+
+function movingOutObj() {
+  if (loadedModel && loadedModel.scene) {
+    if (loadedModel.scene.position.z > 10) {
+      posOutObj("poste");
+    }
+    loadedModel.scene.position.z += objSpeed;
+    pointLight.position.z += objSpeed;
+  }
+
+  if (tree.position.z > 7) {
+    posOutObj("tree");
+  }
+  tree.position.z += objSpeed;
+}
+
 // ------------------------------------
 
 function animate() {
   requestAnimationFrame(animate); // First
 
   // ------------------------------------
-  if (loadedModel && loadedModel.scene) {
-    if (loadedModel.scene.position.z > 10) {
-      loadedModel.scene.position.z = -10;
-      pointLight.position.z = -11.3;
-    }
-    loadedModel.scene.position.z += 0.05;
-    pointLight.position.z += 0.05;
-  }
 
-  if(tree.position.z > 7){
-    tree.position.z = -7;
-  }
-  tree.position.z += 0.05;
-
+  movingOutObj();
   // ------------------------------------
 
   render.render(scene, camera); // Last
