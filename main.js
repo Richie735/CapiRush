@@ -8,7 +8,6 @@ import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 // ------------------------------------
 
-
 // Init Setup -------------------------
 var camera = new THREE.PerspectiveCamera(
   75,
@@ -24,7 +23,6 @@ const render = new THREE.WebGLRenderer({
 
 // ------------------------------------
 
-
 // Camera Setup -----------------------
 function camSetup() {
   camera.position.set(0, 0, 5.3);
@@ -37,14 +35,14 @@ window.addEventListener("keydown", (event) => {
         // Camera 2 - Longe Cima
         scene.remove(camera);
         camera = new THREE.OrthographicCamera(
-          window.innerWidth / -2,
-          window.innerWidth / 2,
-          window.innerHeight / 2,
-          window.innerHeight / -2,
+          window.innerWidth / -10,
+          window.innerWidth / 10,
+          window.innerHeight / 10,
+          window.innerHeight / -10,
           1,
-          1000
+          100000
         );
-        camera.position.set(0, 7, 7);
+        camera.position.set(0, 0, 7);
         scene.add(camera);
         camPos = 2;
       } else if (camPos == 2) {
@@ -56,7 +54,7 @@ window.addEventListener("keydown", (event) => {
           0.1,
           10000
         );
-        camera.position.set(0, 0, 5.3);
+        camera.position.set(0, 0, 0);
         scene.add(camera);
         camPos = 1;
       }
@@ -66,7 +64,6 @@ window.addEventListener("keydown", (event) => {
 
 // ------------------------------------
 
-
 // Render Setup -----------------------
 
 render.setPixelRatio(window.devicePixelRatio);
@@ -74,7 +71,6 @@ render.setSize(window.innerWidth, window.innerHeight);
 render.render(scene, camera);
 
 // ------------------------------------
-
 
 // Scenario ---------------------------
 class Box extends THREE.Mesh {
@@ -159,15 +155,64 @@ function scenarioSetup() {
 }
 // ------------------------------------
 
+// Light ------------------------------
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.075);
+
+const directionalLight = new THREE.DirectionalLight(0xfae9b8, 0.25);
+directionalLight.position.set(0, 5, 0);
+
+const pointLight = new THREE.PointLight(0xe79f8c, 1, 5, 0.3);
+pointLight.position.set(-3, 2, -5);
+
+function lightSetup() {
+  scene.add(ambientLight);
+  scene.add(directionalLight);
+  scene.add(pointLight);
+}
+
+window.addEventListener("keydown", (event) => {
+  switch (event.code) {
+    case "KeyI": // Ambient Light
+      if (ambientLight.intensity == 0) {
+        // Liga a luzi
+        ambientLight.intensity = 0.075;
+      } else {
+        // Desliga a luz
+        ambientLight.intensity = 0;
+      }
+      break;
+    case "KeyO": // Directional Light
+      if (directionalLight.intensity == 0) {
+        // Liga a luzi
+        directionalLight.intensity = 0.25;
+      } else {
+        // Desliga a luz
+        directionalLight.intensity = 0;
+      }
+    break;
+      case "KeyP": // Point Light
+      if (pointLight.intensity == 0) {
+        // Liga a luzi
+        pointLight.intensity = 0.3;
+      } else {
+        // Desliga a luz
+        pointLight.intensity = 0;
+      }
+      break;
+  }
+});
+
+// ------------------------------------
 
 // Test Model -------------------------
+
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 const boxMaterial = new THREE.MeshNormalMaterial();
 const capi = new THREE.Mesh(boxGeometry, boxMaterial);
 capi.position.set(0, -0.5, 3);
-scene.add(capi);
-// ------------------------------------
+//scene.add(capi);
 
+// ------------------------------------
 
 // Font Test---------------------------
 
@@ -192,7 +237,8 @@ ttfLoader.load("assets/fonts/Bungee-Regular.ttf", (json) => {
 
 // ------------------------------------
 
-
+// Move -------------------------------
+// ------------------------------------
 
 function animate() {
   requestAnimationFrame(animate); // First
@@ -207,8 +253,7 @@ function animate() {
 function start() {
   camSetup();
   scenarioSetup();
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
-  scene.add(ambientLight);
+  lightSetup();
   animate();
 }
 
