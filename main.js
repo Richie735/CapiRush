@@ -2,6 +2,7 @@
 import "./style.css";
 
 import * as THREE from "three";
+import * as dat from "dat.gui";
 
 import { TTFLoader } from "three/examples/jsm/loaders/TTFLoader";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
@@ -9,6 +10,7 @@ import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 // ------------------------------------
 
 // Init Setup -------------------------
+const gui = new dat.GUI();
 const scene = new THREE.Scene();
 const render = new THREE.WebGLRenderer({
   canvas: document.querySelector("#bg"),
@@ -181,18 +183,22 @@ function scenarioSetup() {
 
 // Light ------------------------------
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.075);
+gui.add(ambientLight, "intensity").name("Ambient Light").max(0.075).min(0).step(0.075);
 
 const directionalLight = new THREE.DirectionalLight(0xfae9b8, 0.25);
 directionalLight.position.set(0, 5, 0);
+gui.add(directionalLight, "intensity").name("Directional Light").max(0.25).min(0).step(0.25);
 
 const pointLight = new THREE.PointLight(0xe79f8c, 1, 5, 0.3);
 pointLight.position.set(-3, 2, -5);
+gui.add(pointLight, "intensity").name("Point Light").max(0.3).min(0).step(0.3);
 
 function lightSetup() {
   scene.add(ambientLight);
   scene.add(directionalLight);
   scene.add(pointLight);
 }
+
 
 window.addEventListener("keydown", (event) => {
   switch (event.code) {
