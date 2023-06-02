@@ -8,6 +8,7 @@ import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 // ------------------------------------
 
+
 // Init Setup -------------------------
 var camera = new THREE.PerspectiveCamera(
   75,
@@ -22,6 +23,7 @@ const render = new THREE.WebGLRenderer({
 });
 
 // ------------------------------------
+
 
 // Camera Setup -----------------------
 function camSetup() {
@@ -64,6 +66,7 @@ window.addEventListener("keydown", (event) => {
 
 // ------------------------------------
 
+
 // Render Setup -----------------------
 
 render.setPixelRatio(window.devicePixelRatio);
@@ -72,13 +75,99 @@ render.render(scene, camera);
 
 // ------------------------------------
 
+
+// Scenario ---------------------------
+class Box extends THREE.Mesh {
+  constructor({
+    width,
+    height,
+    depth,
+    texture = "",
+    velocity = { x: 0, y: 0, z: 0 },
+    position = { x: 0, y: 0, z: 0 },
+  }) {
+    super(new THREE.BoxGeometry(width, height, depth));
+
+    this.width = width;
+    this.height = height;
+    this.depth = depth;
+
+    this.position.set(position.x, position.y, position.z);
+
+    this.bottom = this.position.y - this.height / 2;
+    this.top = this.position.y + this.height / 2;
+  }
+}
+
+function scenarioSetup() {
+  // Skybox ---------------------------
+  let materialArray = [];
+
+  // Load das texturas
+  let texture_ft = new THREE.TextureLoader().load(
+    "assets/textures/skybox/meadow_ft.jpg"
+  );
+  let texture_bk = new THREE.TextureLoader().load(
+    "assets/textures/skybox/meadow_bk.jpg"
+  );
+  let texture_up = new THREE.TextureLoader().load(
+    "assets/textures/skybox/meadow_up.jpg"
+  );
+  let texture_dn = new THREE.TextureLoader().load(
+    "assets/textures/skybox/meadow_dn.jpg"
+  );
+  let texture_rt = new THREE.TextureLoader().load(
+    "assets/textures/skybox/meadow_rt.jpg"
+  );
+  let texture_lf = new THREE.TextureLoader().load(
+    "assets/textures/skybox/meadow_lf.jpg"
+  );
+
+  // Basic Material Para n precisar de luz para se ver
+  materialArray.push(new THREE.MeshPhongMaterial({ map: texture_ft }));
+  materialArray.push(new THREE.MeshPhongMaterial({ map: texture_bk }));
+  materialArray.push(new THREE.MeshPhongMaterial({ map: texture_up }));
+  materialArray.push(new THREE.MeshPhongMaterial({ map: texture_dn }));
+  materialArray.push(new THREE.MeshPhongMaterial({ map: texture_rt }));
+  materialArray.push(new THREE.MeshPhongMaterial({ map: texture_lf }));
+
+  // Ver o interior do cubo
+  for (let i = 0; i < 6; i++) materialArray[i].side = THREE.BackSide;
+
+  let skyboxGeo = new THREE.BoxGeometry(1000, 1000, 1000);
+  let skybox = new THREE.Mesh(skyboxGeo, materialArray);
+  scene.add(skybox);
+  // ----------------------------------
+
+  // Road -----------------------------
+  const road = new Box({
+    width: 5,
+    height: 0.5,
+    depth: 50,
+    position: { x: 0, y: -1.5, z: 0 },
+  });
+  const roadTexture = new THREE.TextureLoader().load(
+    "./assets/textures/road.jpg"
+  );
+  const roadMaterial = new THREE.MeshPhongMaterial({ map: roadTexture });
+  road.material = roadMaterial;
+  road.material.map.wrapS = THREE.RepeatWrapping;
+  road.material.map.wrapT = THREE.RepeatWrapping;
+  road.material.map.repeat.set(3, 40);
+  scene.add(road);
+  // ----------------------------------
+}
+// ------------------------------------
+
+
 // Test Model -------------------------
-const boxGeometry = new THREE.BoxGeometry(16, 16, 16);
+const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 const boxMaterial = new THREE.MeshNormalMaterial();
 const capi = new THREE.Mesh(boxGeometry, boxMaterial);
-capi.position.set(0, -10, -50);
+capi.position.set(0, -0.5, 3);
 scene.add(capi);
 // ------------------------------------
+
 
 // Font Test---------------------------
 
@@ -103,6 +192,8 @@ ttfLoader.load("assets/fonts/Bungee-Regular.ttf", (json) => {
 
 // ------------------------------------
 
+
+
 function animate() {
   requestAnimationFrame(animate); // First
 
@@ -115,7 +206,9 @@ function animate() {
 
 function start() {
   camSetup();
-
+  scenarioSetup();
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
+  scene.add(ambientLight);
   animate();
 }
 
