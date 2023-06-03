@@ -286,11 +286,13 @@ scene.add(tree);
 tree.position.x = 3;
 tree.position.z = -10;
 
-
-var tree2 = createTree();
+var tree2 = createTree2();
 scene.add(tree2);
 tree2.position.x = 0;
 tree2.position.z = -5;
+
+var bush = createBush();
+scene.add(bush);
 
 // ------------------------------------
 
@@ -317,6 +319,10 @@ function posOutObj(outObj) {
         tree2.position.z = -18;
         tree2.position.x = 0;
         break;
+      case "bush":
+        bush.position.z = -21;
+        bush.position.x = -7.5;
+        break;
     }
   } else {
     switch (outObj) {
@@ -334,6 +340,10 @@ function posOutObj(outObj) {
         tree2.position.z = -18;
         tree2.position.x = 7;
         break;
+      case "bush":
+        bush.position.z = -21;
+        bush.position.x = 0;
+        break;
     }
   }
 }
@@ -350,12 +360,16 @@ function movingOutObj() {
     if (tree2.position.z > 7.5) {
       posOutObj("tree2");
     }
+    if (bush.position.z > 7.5) {
+      posOutObj("bush");
+    }
 
     // Moving
     loadedModel.scene.position.z += objSpeed;
     pointLight.position.z += objSpeed;
     tree.position.z += objSpeed;
     tree2.position.z += objSpeed;
+    bush.position.z += objSpeed;
   }
 }
 
@@ -443,7 +457,7 @@ function createSquareTree() {
   return tree;
 }
 
-function createTree() {
+function createTree2() {
   const tree2 = new THREE.Group();
 
   // Criação da geometria da árvore
@@ -477,4 +491,48 @@ function createTree() {
   tree2.position.y = 0.5;
 
   return tree2;
+}
+
+function createBush(scene) {
+  const tree3 = new THREE.Group();
+
+  // Criação da geometria da árvore
+  const leafGeometry = new THREE.SphereGeometry(0.5, 8, 6); 
+  // Criação dos materiais
+  const leafMaterial = createFolhaMaterial();
+
+  // Criação das malhas
+  const leafMesh1 = new THREE.Mesh(leafGeometry, leafMaterial); 
+  const leafMesh2 = new THREE.Mesh(leafGeometry, leafMaterial); 
+  const leafMesh3 = new THREE.Mesh(leafGeometry, leafMaterial);
+  const leafMesh4 = new THREE.Mesh(leafGeometry, leafMaterial);
+
+
+  leafMesh1.castShadow = true;
+  leafMesh2.castShadow = true;
+  leafMesh3.castShadow = true;
+  leafMesh4.castShadow = true;
+  leafMesh1.receiveShadow = true;
+  leafMesh2.receiveShadow = true;
+  leafMesh3.receiveShadow = true;
+  leafMesh4.receiveShadow = true;
+
+  // Posicionamento das malhas
+  leafMesh1.position.set(4, -0.9, 0.7); 
+  leafMesh2.position.set(3.6, -1, 0.3); 
+  leafMesh2.scale.set(1, 0.8, 1);
+  leafMesh3.position.set(4.2, -0.6, 0);
+  leafMesh4.position.set(4.5, -1, 0.4); 
+  leafMesh4.scale.set(1, 0.7, 1);
+
+
+  // Adição das malhas à cena
+  tree3.add(leafMesh1);
+  tree3.add(leafMesh2);
+  tree3.add(leafMesh3);
+  tree3.add(leafMesh4);
+
+  tree3.position.x = 0;
+
+  return tree3;
 }
