@@ -276,12 +276,10 @@ ttfLoader.load("assets/fonts/Bungee-Regular.ttf", (json) => {
 // ------------------------------------
 
 // Add Obstacles ----------------------
-
 // Bola
 var ball = createBall();
 scene.add(ball);
-ball.position.x -= 2;
-
+ball.position.x = -1.63;
 
 // Carro Vermelho
 var car = createCar(0);
@@ -307,7 +305,6 @@ scene.add(roda2);
 scene.add(roda3);
 scene.add(roda4);
 
-
 // Carro Verde
 var carGreen = createCar(1);
 const rodaGreen1 = createRoda();
@@ -332,57 +329,194 @@ scene.add(rodaGreen2);
 scene.add(rodaGreen3);
 scene.add(rodaGreen4);
 
-
 // Roda
 var roda = createRoda();
-scene.add(roda);
-roda.position.set(0, -0.4, 0);
+//scene.add(roda);
+roda.position.set(-3.6, -0.4, 0);
 roda.scale.set(2, 2, 2);
 
 // ------------------------------------
 
-
 // Obstacles Moving -------------------
 
 function movingObstacles() {
-  if (loadedModel && loadedModel.scene) {
-    if (ball.position.z > 10) {
-      ball.position.z = -15;
-    }
-    if (car.position.z > 10) {
-      car.position.z = -15;
-      roda1.position.z = -14.5;
-      roda2.position.z = -15.7;
-      roda3.position.z = -14.5;
-      roda4.position.z = -15.7;
-    }
-    if (roda.position.z > 10) {
-      roda.position.z = -15;
-    }
+  var ranPos;
+  var count = 0;
+  var oldRandom;
 
-    ball.position.z += objSpeed;
-    ball.rotation.x += objSpeed;
-  
-    roda.position.z += objSpeed;
-    roda.rotation.x += objSpeed;
+  if (ball.position.z > 10) {
+    ranPos = Math.floor(Math.random() * 3);
+    obstaclesLane("ball", ranPos, count, oldRandom);
+    count++;
+    oldRandom = ranPos;
+  }
+  if (car.position.z > 10) {
+    ranPos = Math.floor(Math.random() * 3);
+    obstaclesLane("redCar", ranPos, count, oldRandom);
+    count++;
+    oldRandom = ranPos;
+  }
+  if (carGreen.position.z > 10) {
+    ranPos = Math.floor(Math.random() * 3);
+    obstaclesLane("greenCar", ranPos, count, oldRandom);
+    count++;
+    oldRandom = ranPos;
+  }
+  if (roda.position.z > 10) {
+    ranPos = Math.floor(Math.random() * 3);
+    obstaclesLane("roda", ranPos, count, oldRandom);
+    count++;
+    oldRandom = ranPos;
+  }
 
-    car.position.z += objSpeed;
-    roda1.position.z += objSpeed;
-    roda2.position.z += objSpeed;
-    roda3.position.z += objSpeed;
-    roda4.position.z += objSpeed;
+  ball.position.z += objSpeed;
+  ball.rotation.x += objSpeed;
 
-    roda1.rotation.x += objSpeed;
-    roda2.rotation.x += objSpeed;
-    roda3.rotation.x += objSpeed;
-    roda4.rotation.x += objSpeed;
+  roda.position.z += objSpeed;
+  roda.rotation.x += objSpeed;
 
+  car.position.z += objSpeed;
+  roda1.position.z += objSpeed;
+  roda2.position.z += objSpeed;
+  roda3.position.z += objSpeed;
+  roda4.position.z += objSpeed;
 
+  carGreen.position.z += objSpeed;
+  rodaGreen1.position.z += objSpeed;
+  rodaGreen2.position.z += objSpeed;
+  rodaGreen3.position.z += objSpeed;
+  rodaGreen4.position.z += objSpeed;
+
+  roda1.rotation.x += objSpeed;
+  roda2.rotation.x += objSpeed;
+  roda3.rotation.x += objSpeed;
+  roda4.rotation.x += objSpeed;
+
+  rodaGreen1.rotation.x += objSpeed;
+  rodaGreen2.rotation.x += objSpeed;
+  rodaGreen3.rotation.x += objSpeed;
+  rodaGreen4.rotation.x += objSpeed;
+}
+
+function carFrentex(flag) {
+  switch (flag) {
+    case "red":
+      car.position.z = -25;
+      roda1.position.z = -24.5;
+      roda2.position.z = -25.7;
+      roda3.position.z = -24.5;
+      roda4.position.z = -25.7;
+      break;
+    case "green":
+      carGreen.position.z = -15;
+      rodaGreen1.position.z = -14.5;
+      rodaGreen2.position.z = -15.7;
+      rodaGreen3.position.z = -14.5;
+      rodaGreen4.position.z = -15.7;
+      break;
   }
 }
 
-// ------------------------------------
+function obstaclesLane(obj, position, count, oldRandom) {
+  if (count == 1) {
+    while (position == oldRandom) {
+      position = Math.floor(Math.random() * 3);
+    }
+  } else if (count != 2) {
+    switch (position) {
+      case 0: // left
+        switch (obj) {
+          case "redCar":
+            car.position.x = -1.45;
+            roda1.position.x = -2.9;
+            roda2.position.x = -2.9;
+            roda3.position.x = -1.8;
+            roda4.position.x = -1.8;
+            carFrentex("red");
+            break;
+          case "greenCar":
+            carGreen.position.x = -1.45;
+            rodaGreen1.position.x = -2.9;
+            rodaGreen2.position.x = -2.9;
+            rodaGreen3.position.x = -1.8;
+            rodaGreen4.position.x = -1.8;
+            carFrentex("green");
+            break;
+          case "ball":
+            ball.position.x = -1.63;
+            ball.position.z = -17;
+            break;
+          case "roda":
+            roda.position.x = -3.6;
+            roda.position.z = -8;
+            break;
+        }
+        break;
+      case 1: // center
+        switch (obj) {
+          case "redCar":
+            car.position.x = 0;
+            roda1.position.x = -1.45;
+            roda2.position.x = -1.45;
+            roda3.position.x = -0.35;
+            roda4.position.x = -0.35;
+            carFrentex("red");
+            break;
+          case "greenCar":
+            carGreen.position.x = 0;
+            rodaGreen1.position.x = -1.45;
+            rodaGreen2.position.x = -1.45;
+            rodaGreen3.position.x = -0.35;
+            rodaGreen4.position.x = -0.35;
+            carFrentex("green");
 
+            break;
+          case "ball":
+            ball.position.x = 0;
+            ball.position.z = -15;
+            break;
+          case "roda":
+            roda.position.x = -2;
+            roda.position.z = -15;
+
+            break;
+        }
+        break;
+      case 2: // right
+        switch (obj) {
+          case "redCar":
+            car.position.x = 1.45;
+            roda1.position.x = 0;
+            roda2.position.x = 0;
+            roda3.position.x = 1.1;
+            roda4.position.x = 1.1;
+            carFrentex("red");
+
+            break;
+          case "greenCar":
+            carGreen.position.x = 1.45;
+            rodaGreen1.position.x = 0;
+            rodaGreen2.position.x = 0;
+            rodaGreen3.position.x = 1.1;
+            rodaGreen4.position.x = 1.1;
+            carFrentex("green");
+            break;
+          case "ball":
+            ball.position.x = 1.63;
+            ball.position.z = -15;
+            break;
+          case "roda":
+            roda.position.x = -0.5;
+            roda.position.z = -15;
+            break;
+        }
+        break;
+    }
+  }
+  count++;
+}
+
+// ------------------------------------
 
 // Add Objects ------------------------
 
@@ -493,8 +627,10 @@ function animate() {
   requestAnimationFrame(animate); // First
 
   // ------------------------------------
-  movingObstacles();
-  movingOutObj();
+  if (loadedModel && loadedModel.scene) {
+    movingObstacles();
+    movingOutObj();
+  }
   // ------------------------------------
 
   render.render(scene, camera); // Last
@@ -572,7 +708,7 @@ function createCar(num) {
   };
 
   var main;
-  switch(num){
+  switch (num) {
     case 0:
       main = new THREE.Mesh(
         new THREE.ExtrudeGeometry(shape, extrudeSettings),
