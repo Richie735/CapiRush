@@ -250,8 +250,6 @@ window.addEventListener("keydown", (event) => {
 
 // ------------------------------------
 
-// Test Model -------------------------
-// ------------------------------------
 
 // Font Test---------------------------
 
@@ -278,8 +276,25 @@ ttfLoader.load("assets/fonts/Bungee-Regular.ttf", (json) => {
 // ------------------------------------
 
 // Add Obstacles ----------------------
+var ball = createBall();
+scene.add(ball);
+// ------------------------------------
+
+
+// Obstacles Moving -------------------
+
+function movingObstacles() {
+  if (loadedModel && loadedModel.scene) {
+    if(ball.position.z > 10){
+      ball.position.z = -15;
+    }
+    ball.position.z += objSpeed;
+    ball.rotation.x += objSpeed;
+  }
+}
 
 // ------------------------------------
+
 
 // Add Objects ------------------------
 
@@ -390,7 +405,7 @@ function animate() {
   requestAnimationFrame(animate); // First
 
   // ------------------------------------
-
+  movingObstacles();
   movingOutObj();
   // ------------------------------------
 
@@ -405,6 +420,23 @@ function start() {
 }
 
 start();
+
+function createBall()
+{
+    const geometry = new THREE.SphereBufferGeometry(0.5, 16, 16);
+
+    const material = new THREE.MeshPhongMaterial({
+        map: new THREE.TextureLoader().load('assets/textures/smile.png'),
+      });
+
+    const ball = new THREE.Mesh(geometry, material);
+    ball.rotateY(-Math.PI / 2);
+
+    ball.position.set(0, -0.75, 0);
+
+    return ball;
+
+}
 
 function createTrunkMaterial() {
   const trunkMaterial = new THREE.MeshPhongMaterial({
