@@ -65,10 +65,11 @@ window.addEventListener("keydown", (event) => {
           sizes.width / 2,
           sizes.height / 2,
           sizes.height / -2,
-          90,
-          100
+          0,
+          1000
         );
-        camera.position.set(0, 0, 0);
+        camera.position.set(500, -100, -200);
+        camera.lookAt(0, 10, 0);
         scene.add(camera);
         camPos = 2;
       } else if (camPos == 2) {
@@ -203,8 +204,8 @@ const pointLight = new THREE.PointLight(0xe79f8c, 1, 5, 1);
 pointLight.position.set(-3.1, 1, -2.1);
 gui.add(pointLight, "intensity").name("Point Light").max(1).min(0).step(0.1);
 
-const pointLightHelper = new THREE.PointLightHelper(pointLight, 1);
-scene.add(pointLightHelper);
+//const pointLightHelper = new THREE.PointLightHelper(pointLight, 1);
+//scene.add(pointLightHelper);
 
 function lightSetup() {
   scene.add(ambientLight);
@@ -250,7 +251,6 @@ window.addEventListener("keydown", (event) => {
 
 // ------------------------------------
 
-
 // Font Test---------------------------
 
 const fontLoader = new FontLoader();
@@ -278,23 +278,34 @@ ttfLoader.load("assets/fonts/Bungee-Regular.ttf", (json) => {
 // Add Obstacles ----------------------
 var ball = createBall();
 scene.add(ball);
-// ------------------------------------
 
+var car = createCar();
+scene.add(car);
+//car.position.x -= 1.65;
+//car.rotation.y = (Math.PI / 2);
+// ------------------------------------
 
 // Obstacles Moving -------------------
 
 function movingObstacles() {
   if (loadedModel && loadedModel.scene) {
-    if(ball.position.z > 10){
+    if (ball.position.z > 10) {
       ball.position.z = -15;
     }
+    if(car.position.z > 10){
+      car.position.z = -15;
+    }
+
     ball.position.z += objSpeed;
     ball.rotation.x += objSpeed;
+    //car.position.z += objSpeed;
+
+    
+
   }
 }
 
 // ------------------------------------
-
 
 // Add Objects ------------------------
 
@@ -323,7 +334,7 @@ scene.add(bush);
 // ------------------------------------
 
 // Out Obj Moving ---------------------
-var objSpeed = 0.1;
+var objSpeed = 0.03;
 var randomPos;
 
 function posOutObj(outObj) {
@@ -333,9 +344,9 @@ function posOutObj(outObj) {
     switch (outObj) {
       case "poste":
         loadedModel.scene.position.z = -15;
-      loadedModel.scene.position.x = -2.8;
-      pointLight.position.z = -15;
-      pointLight.position.x = -2.8;
+        loadedModel.scene.position.x = -2.8;
+        pointLight.position.z = -15;
+        pointLight.position.x = -2.8;
         break;
       case "tree":
         tree.position.z = -20;
@@ -421,21 +432,86 @@ function start() {
 
 start();
 
-function createBall()
-{
-    const geometry = new THREE.SphereBufferGeometry(0.5, 16, 16);
+function createBall() {
+  const geometry = new THREE.SphereBufferGeometry(0.5, 16, 16);
 
-    const material = new THREE.MeshPhongMaterial({
-        map: new THREE.TextureLoader().load('assets/textures/smile.png'),
-      });
+  const material = new THREE.MeshPhongMaterial({
+    map: new THREE.TextureLoader().load("assets/textures/smile.png"),
+  });
 
-    const ball = new THREE.Mesh(geometry, material);
-    ball.rotateY(-Math.PI / 2);
+  const ball = new THREE.Mesh(geometry, material);
+  ball.rotateY(-Math.PI / 2);
 
-    ball.position.set(0, -0.75, 0);
+  ball.position.set(0, -0.75, 0);
 
-    return ball;
+  return ball;
+}
 
+function createRoda() {
+  const roda = new THREE.Group();
+
+  const geometry = new THREE.CylinderGeometry(1, 1, 0.5, 32);
+  const jante = new THREE.CylinderGeometry(0.5, 0.5, 0.5, 32);
+
+  const material = new THREE.MeshBasicMaterial({ color: 0x000000 });
+  const material_2 = new THREE.MeshBasicMaterial({ color: 0x1b1e23 });
+
+  const tire = new THREE.Mesh(geometry, material);
+  const tire2 = new THREE.Mesh(jante, material_2);
+
+  tire.position.set(0, -1, 0);
+  tire.scale.set(0.4, 0.4, 0.4);
+  tire2.position.set(0, -1.02, 0);
+  tire2.scale.set(0.5, 0.5, 0.5);
+
+  roda.add(tire);
+  roda.add(tire2);
+
+  roda.rotateZ(Math.PI / 2);
+  roda.position.y = -0.8;
+
+  return roda;
+}
+
+function createCar() {
+  const car = new THREE.Group();
+
+  const roda1 = createRoda();
+  roda1.scale.set(0.9, 0.9, 0.9);
+  roda1.position.x = -1.45;
+  roda1.position.z = 0.6;
+  
+  const roda2 = createRoda();
+  roda2.scale.set(0.9, 0.9, 0.9);
+  roda2.position.x = -1.45;
+  roda2.position.z = -0.6;
+
+  const roda3 = createRoda();
+  roda3.scale.set(0.9, 0.9, 0.9);
+  roda3.position.x = -0.35;
+  roda3.position.z = 0.6;
+  
+  const roda4 = createRoda();
+  roda4.scale.set(0.9, 0.9, 0.9);
+  roda4.position.x = -0.35;
+  roda4.position.z = -0.6;
+
+
+  const main = new THREE.Mesh(
+    new THREE.BoxBufferGeometry(0.9, 0.6, 1.9),
+    new THREE.MeshLambertMaterial({ color: 0xff0000 })
+  );
+
+  main.position.y = -0.6;
+  main.position.x = 0;
+  car.add(main);
+
+  car.add(roda1);
+  car.add(roda2);
+  car.add(roda3);
+  car.add(roda4);
+
+  return car;
 }
 
 function createTrunkMaterial() {
