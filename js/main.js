@@ -276,13 +276,15 @@ ttfLoader.load("assets/fonts/Bungee-Regular.ttf", (json) => {
 // ------------------------------------
 
 // Add Obstacles ----------------------
+
+// Bola
 var ball = createBall();
 scene.add(ball);
 ball.position.x -= 2;
 
-var car = createCar();
-scene.add(car);
 
+// Carro Vermelho
+var car = createCar(0);
 const roda1 = createRoda();
 roda1.scale.set(0.9, 0.9, 0.9);
 roda1.position.x = -1.45;
@@ -299,18 +301,46 @@ const roda4 = createRoda();
 roda4.scale.set(0.9, 0.9, 0.9);
 roda4.position.x = -0.35;
 roda4.position.z = -0.6;
-
+scene.add(car);
 scene.add(roda1);
 scene.add(roda2);
 scene.add(roda3);
 scene.add(roda4);
 
 
+// Carro Verde
+var carGreen = createCar(1);
+const rodaGreen1 = createRoda();
+rodaGreen1.scale.set(0.9, 0.9, 0.9);
+rodaGreen1.position.x = -1.45;
+rodaGreen1.position.z = 0.6;
+const rodaGreen2 = createRoda();
+rodaGreen2.scale.set(0.9, 0.9, 0.9);
+rodaGreen2.position.x = -1.45;
+rodaGreen2.position.z = -0.6;
+const rodaGreen3 = createRoda();
+rodaGreen3.scale.set(0.9, 0.9, 0.9);
+rodaGreen3.position.x = -0.35;
+rodaGreen3.position.z = 0.6;
+const rodaGreen4 = createRoda();
+rodaGreen4.scale.set(0.9, 0.9, 0.9);
+rodaGreen4.position.x = -0.35;
+rodaGreen4.position.z = -0.6;
+scene.add(carGreen);
+scene.add(rodaGreen1);
+scene.add(rodaGreen2);
+scene.add(rodaGreen3);
+scene.add(rodaGreen4);
+
+
+// Roda
 var roda = createRoda();
 scene.add(roda);
 roda.position.set(0, -0.4, 0);
 roda.scale.set(2, 2, 2);
+
 // ------------------------------------
+
 
 // Obstacles Moving -------------------
 
@@ -352,6 +382,7 @@ function movingObstacles() {
 }
 
 // ------------------------------------
+
 
 // Add Objects ------------------------
 
@@ -521,7 +552,7 @@ function createRoda() {
   return roda;
 }
 
-function createCar() {
+function createCar(num) {
   const car = new THREE.Group();
 
   const shape = new THREE.Shape();
@@ -540,10 +571,21 @@ function createCar() {
     bevelSegments: 3,
   };
 
-  const main = new THREE.Mesh(
-    new THREE.ExtrudeGeometry(shape, extrudeSettings),
-    new THREE.MeshPhongMaterial({ color: 0xff0000 })
-  );
+  var main;
+  switch(num){
+    case 0:
+      main = new THREE.Mesh(
+        new THREE.ExtrudeGeometry(shape, extrudeSettings),
+        new THREE.MeshPhongMaterial({ color: 0xff0000 })
+      );
+      break;
+    case 1:
+      main = new THREE.Mesh(
+        new THREE.ExtrudeGeometry(shape, extrudeSettings),
+        new THREE.MeshPhongMaterial({ color: 0x00ff00 })
+      );
+      break;
+  }
   main.scale.set(0.7, 0.7, 0.53);
   main.position.set(-0.35, -0.7, -0.8);
   car.add(main);
