@@ -190,18 +190,21 @@ gui
   .min(0)
   .step(0.075);
 
-const directionalLight = new THREE.DirectionalLight(0xfae9b8, 0.25);
+const directionalLight = new THREE.DirectionalLight(0xfae9b8, 0.1);
 directionalLight.position.set(0, 5, 0);
 gui
   .add(directionalLight, "intensity")
   .name("Directional Light")
-  .max(0.25)
+  .max(0.3)
   .min(0)
-  .step(0.25);
+  .step(0.1);
 
-const pointLight = new THREE.PointLight(0xe79f8c, 1, 5, 0.5);
-pointLight.position.set(-3, 2, -3.3);
-gui.add(pointLight, "intensity").name("Point Light").max(0.3).min(0).step(0.3);
+const pointLight = new THREE.PointLight(0xe79f8c, 1, 5, 1);
+pointLight.position.set(-3.1, 1, -2.1);
+gui.add(pointLight, "intensity").name("Point Light").max(1).min(0).step(0.1);
+
+const pointLightHelper = new THREE.PointLightHelper(pointLight, 1);
+scene.add(pointLightHelper);
 
 function lightSetup() {
   scene.add(ambientLight);
@@ -209,34 +212,38 @@ function lightSetup() {
   scene.add(pointLight);
 }
 
+function toggleAmbientLight() {
+  if (ambientLight.intensity == 0) {
+    ambientLight.intensity = 0.075;
+  } else {
+    ambientLight.intensity = 0;
+  }
+}
+function toggleDirectionalLight() {
+  if (directionalLight.intensity == 0) {
+    directionalLight.intensity = 0.25;
+  } else {
+    directionalLight.intensity = 0;
+  }
+}
+function togglePointLight() {
+  if (pointLight.intensity == 0) {
+    pointLight.intensity = 1;
+  } else {
+    pointLight.intensity = 0;
+  }
+}
+
 window.addEventListener("keydown", (event) => {
   switch (event.code) {
     case "KeyI": // Ambient Light
-      if (ambientLight.intensity == 0) {
-        // Liga a luzi
-        ambientLight.intensity = 0.075;
-      } else {
-        // Desliga a luz
-        ambientLight.intensity = 0;
-      }
+      toggleAmbientLight();
       break;
     case "KeyO": // Directional Light
-      if (directionalLight.intensity == 0) {
-        // Liga a luzi
-        directionalLight.intensity = 0.25;
-      } else {
-        // Desliga a luz
-        directionalLight.intensity = 0;
-      }
+      toggleDirectionalLight();
       break;
     case "KeyP": // Point Light
-      if (pointLight.intensity == 0) {
-        // Liga a luzi
-        pointLight.intensity = 0.3;
-      } else {
-        // Desliga a luz
-        pointLight.intensity = 0;
-      }
+      togglePointLight();
       break;
   }
 });
@@ -270,13 +277,17 @@ ttfLoader.load("assets/fonts/Bungee-Regular.ttf", (json) => {
 
 // ------------------------------------
 
+// Add Obstacles ----------------------
+
+// ------------------------------------
+
 // Add Objects ------------------------
 
 let loadedModel;
 const glftLoader = new GLTFLoader();
 glftLoader.load("./assets/models/poste/scene.gltf", (gltfScene) => {
   loadedModel = gltfScene;
-  gltfScene.scene.position.set(-2.3, -1.3, -2);
+  gltfScene.scene.position.set(-2.8, -1.3, -2);
   gltfScene.scene.scale.set(1, 1.2, 1);
   scene.add(gltfScene.scene);
 });
@@ -307,9 +318,9 @@ function posOutObj(outObj) {
     switch (outObj) {
       case "poste":
         loadedModel.scene.position.z = -15;
-        loadedModel.scene.position.x = -2.8;
-        pointLight.position.z = -15.3;
-        pointLight.position.x = -3.5;
+      loadedModel.scene.position.x = -2.8;
+      pointLight.position.z = -15;
+      pointLight.position.x = -2.8;
         break;
       case "tree":
         tree.position.z = -20;
@@ -329,8 +340,8 @@ function posOutObj(outObj) {
       case "poste":
         loadedModel.scene.position.z = -15;
         loadedModel.scene.position.x = 2.8;
-        pointLight.position.z = -15.3;
-        pointLight.position.x = 3.5;
+        pointLight.position.z = -15;
+        pointLight.position.x = 2.8;
         break;
       case "tree":
         tree.position.z = -20;
@@ -497,16 +508,15 @@ function createBush(scene) {
   const tree3 = new THREE.Group();
 
   // Criação da geometria da árvore
-  const leafGeometry = new THREE.SphereGeometry(0.5, 8, 6); 
+  const leafGeometry = new THREE.SphereGeometry(0.5, 8, 6);
   // Criação dos materiais
   const leafMaterial = createFolhaMaterial();
 
   // Criação das malhas
-  const leafMesh1 = new THREE.Mesh(leafGeometry, leafMaterial); 
-  const leafMesh2 = new THREE.Mesh(leafGeometry, leafMaterial); 
+  const leafMesh1 = new THREE.Mesh(leafGeometry, leafMaterial);
+  const leafMesh2 = new THREE.Mesh(leafGeometry, leafMaterial);
   const leafMesh3 = new THREE.Mesh(leafGeometry, leafMaterial);
   const leafMesh4 = new THREE.Mesh(leafGeometry, leafMaterial);
-
 
   leafMesh1.castShadow = true;
   leafMesh2.castShadow = true;
@@ -518,13 +528,12 @@ function createBush(scene) {
   leafMesh4.receiveShadow = true;
 
   // Posicionamento das malhas
-  leafMesh1.position.set(4, -0.9, 0.7); 
-  leafMesh2.position.set(3.6, -1, 0.3); 
+  leafMesh1.position.set(4, -0.9, 0.7);
+  leafMesh2.position.set(3.6, -1, 0.3);
   leafMesh2.scale.set(1, 0.8, 1);
   leafMesh3.position.set(4.2, -0.6, 0);
-  leafMesh4.position.set(4.5, -1, 0.4); 
+  leafMesh4.position.set(4.5, -1, 0.4);
   leafMesh4.scale.set(1, 0.7, 1);
-
 
   // Adição das malhas à cena
   tree3.add(leafMesh1);
