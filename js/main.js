@@ -278,11 +278,38 @@ ttfLoader.load("assets/fonts/Bungee-Regular.ttf", (json) => {
 // Add Obstacles ----------------------
 var ball = createBall();
 scene.add(ball);
+ball.position.x -= 2;
 
 var car = createCar();
 scene.add(car);
-car.position.x -= 1.65;
-//car.rotation.y = Math.PI / 2;
+
+const roda1 = createRoda();
+roda1.scale.set(0.9, 0.9, 0.9);
+roda1.position.x = -1.45;
+roda1.position.z = 0.6;
+const roda2 = createRoda();
+roda2.scale.set(0.9, 0.9, 0.9);
+roda2.position.x = -1.45;
+roda2.position.z = -0.6;
+const roda3 = createRoda();
+roda3.scale.set(0.9, 0.9, 0.9);
+roda3.position.x = -0.35;
+roda3.position.z = 0.6;
+const roda4 = createRoda();
+roda4.scale.set(0.9, 0.9, 0.9);
+roda4.position.x = -0.35;
+roda4.position.z = -0.6;
+
+scene.add(roda1);
+scene.add(roda2);
+scene.add(roda3);
+scene.add(roda4);
+
+
+var roda = createRoda();
+scene.add(roda);
+roda.position.set(0, -0.4, 0);
+roda.scale.set(2, 2, 2);
 // ------------------------------------
 
 // Obstacles Moving -------------------
@@ -294,11 +321,33 @@ function movingObstacles() {
     }
     if (car.position.z > 10) {
       car.position.z = -15;
+      roda1.position.z = -14.5;
+      roda2.position.z = -15.7;
+      roda3.position.z = -14.5;
+      roda4.position.z = -15.7;
+    }
+    if (roda.position.z > 10) {
+      roda.position.z = -15;
     }
 
     ball.position.z += objSpeed;
     ball.rotation.x += objSpeed;
+  
+    roda.position.z += objSpeed;
+    roda.rotation.x += objSpeed;
+
     car.position.z += objSpeed;
+    roda1.position.z += objSpeed;
+    roda2.position.z += objSpeed;
+    roda3.position.z += objSpeed;
+    roda4.position.z += objSpeed;
+
+    roda1.rotation.x += objSpeed;
+    roda2.rotation.x += objSpeed;
+    roda3.rotation.x += objSpeed;
+    roda4.rotation.x += objSpeed;
+
+
   }
 }
 
@@ -450,13 +499,15 @@ function createRoda() {
   const geometry = new THREE.CylinderGeometry(1, 1, 0.5, 32);
   const jante = new THREE.CylinderGeometry(0.5, 0.5, 0.5, 32);
 
-  const material = new THREE.MeshPhongMaterial({ color: 0x000000 });
+  const material = new THREE.MeshPhongMaterial({
+    map: new THREE.TextureLoader().load("./assets/textures/tire.jpg"),
+  });
   const material_2 = new THREE.MeshPhongMaterial({ color: 0x1b1e23 });
 
   const tire = new THREE.Mesh(geometry, material);
   const tire2 = new THREE.Mesh(jante, material_2);
 
-  tire.position.set(0, -1, 0);
+  tire.position.set(0, -1.02, 0);
   tire.scale.set(0.4, 0.4, 0.4);
   tire2.position.set(0, -1.02, 0);
   tire2.scale.set(0.5, 0.5, 0.5);
@@ -472,31 +523,6 @@ function createRoda() {
 
 function createCar() {
   const car = new THREE.Group();
-
-  const roda1 = createRoda();
-  roda1.scale.set(0.9, 0.9, 0.9);
-  roda1.position.x = -1.45;
-  roda1.position.z = 0.6;
-
-  const roda2 = createRoda();
-  roda2.scale.set(0.9, 0.9, 0.9);
-  roda2.position.x = -1.45;
-  roda2.position.z = -0.6;
-
-  const roda3 = createRoda();
-  roda3.scale.set(0.9, 0.9, 0.9);
-  roda3.position.x = -0.35;
-  roda3.position.z = 0.6;
-
-  const roda4 = createRoda();
-  roda4.scale.set(0.9, 0.9, 0.9);
-  roda4.position.x = -0.35;
-  roda4.position.z = -0.6;
-
-  car.add(roda1);
-  car.add(roda2);
-  car.add(roda3);
-  car.add(roda4);
 
   const shape = new THREE.Shape();
   shape.lineTo(0, 0.4);
