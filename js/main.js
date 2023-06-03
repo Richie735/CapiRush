@@ -281,8 +281,8 @@ scene.add(ball);
 
 var car = createCar();
 scene.add(car);
-//car.position.x -= 1.65;
-//car.rotation.y = (Math.PI / 2);
+car.position.x -= 1.65;
+//car.rotation.y = Math.PI / 2;
 // ------------------------------------
 
 // Obstacles Moving -------------------
@@ -292,16 +292,13 @@ function movingObstacles() {
     if (ball.position.z > 10) {
       ball.position.z = -15;
     }
-    if(car.position.z > 10){
+    if (car.position.z > 10) {
       car.position.z = -15;
     }
 
     ball.position.z += objSpeed;
     ball.rotation.x += objSpeed;
-    //car.position.z += objSpeed;
-
-    
-
+    car.position.z += objSpeed;
   }
 }
 
@@ -453,8 +450,8 @@ function createRoda() {
   const geometry = new THREE.CylinderGeometry(1, 1, 0.5, 32);
   const jante = new THREE.CylinderGeometry(0.5, 0.5, 0.5, 32);
 
-  const material = new THREE.MeshBasicMaterial({ color: 0x000000 });
-  const material_2 = new THREE.MeshBasicMaterial({ color: 0x1b1e23 });
+  const material = new THREE.MeshPhongMaterial({ color: 0x000000 });
+  const material_2 = new THREE.MeshPhongMaterial({ color: 0x1b1e23 });
 
   const tire = new THREE.Mesh(geometry, material);
   const tire2 = new THREE.Mesh(jante, material_2);
@@ -480,7 +477,7 @@ function createCar() {
   roda1.scale.set(0.9, 0.9, 0.9);
   roda1.position.x = -1.45;
   roda1.position.z = 0.6;
-  
+
   const roda2 = createRoda();
   roda2.scale.set(0.9, 0.9, 0.9);
   roda2.position.x = -1.45;
@@ -490,26 +487,50 @@ function createCar() {
   roda3.scale.set(0.9, 0.9, 0.9);
   roda3.position.x = -0.35;
   roda3.position.z = 0.6;
-  
+
   const roda4 = createRoda();
   roda4.scale.set(0.9, 0.9, 0.9);
   roda4.position.x = -0.35;
   roda4.position.z = -0.6;
 
-
-  const main = new THREE.Mesh(
-    new THREE.BoxBufferGeometry(0.9, 0.6, 1.9),
-    new THREE.MeshLambertMaterial({ color: 0xff0000 })
-  );
-
-  main.position.y = -0.6;
-  main.position.x = 0;
-  car.add(main);
-
   car.add(roda1);
   car.add(roda2);
   car.add(roda3);
   car.add(roda4);
+
+  const shape = new THREE.Shape();
+  shape.lineTo(0, 0.4);
+  shape.lineTo(1, 0.4);
+  shape.lineTo(1, 0);
+  shape.lineTo(0, 0);
+
+  const extrudeSettings = {
+    steps: 1,
+    depth: 3,
+    bevelEnabled: true,
+    bevelThickness: 0.7,
+    bevelSize: 0.2,
+    bevelOffset: 0,
+    bevelSegments: 3,
+  };
+
+  const main = new THREE.Mesh(
+    new THREE.ExtrudeGeometry(shape, extrudeSettings),
+    new THREE.MeshPhongMaterial({ color: 0xff0000 })
+  );
+  main.scale.set(0.7, 0.7, 0.53);
+  main.position.set(-0.35, -0.7, -0.8);
+  car.add(main);
+
+  const top = new THREE.Mesh(
+    new THREE.SphereGeometry(10, 10, 10),
+    new THREE.MeshPhongMaterial({ color: 0xffffff })
+  );
+  top.scale.set(0.045, 0.04, 0.08);
+  top.position.set(0, -0.3, 0);
+  car.add(top);
+
+  car.position.set(0, -0.1, 0);
 
   return car;
 }
