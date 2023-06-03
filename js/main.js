@@ -276,14 +276,21 @@ let loadedModel;
 const glftLoader = new GLTFLoader();
 glftLoader.load("./assets/models/poste/scene.gltf", (gltfScene) => {
   loadedModel = gltfScene;
-  gltfScene.scene.position.set(-2.3, -1, -2);
+  gltfScene.scene.position.set(-2.3, -1.3, -2);
   gltfScene.scene.scale.set(1, 1.2, 1);
   scene.add(gltfScene.scene);
 });
 
-var tree = createTree();
+var tree = createSquareTree();
 scene.add(tree);
-tree.position.x = 2;
+tree.position.x = 3;
+tree.position.z = -10;
+
+
+var tree2 = createTree();
+scene.add(tree2);
+tree2.position.x = 0;
+tree2.position.z = -5;
 
 // ------------------------------------
 
@@ -297,27 +304,35 @@ function posOutObj(outObj) {
   if (randomPos == 1) {
     switch (outObj) {
       case "poste":
-        loadedModel.scene.position.z = -10;
-        loadedModel.scene.position.x = -2.3;
-        pointLight.position.z = -11.3;
-        pointLight.position.x = -3;
+        loadedModel.scene.position.z = -15;
+        loadedModel.scene.position.x = -2.8;
+        pointLight.position.z = -15.3;
+        pointLight.position.x = -3.5;
         break;
       case "tree":
-        tree.position.z = -15;
-        tree.position.x = -2;
+        tree.position.z = -20;
+        tree.position.x = -2.8;
+        break;
+      case "tree2":
+        tree2.position.z = -18;
+        tree2.position.x = 0;
         break;
     }
   } else {
     switch (outObj) {
       case "poste":
-        loadedModel.scene.position.z = -10;
-        loadedModel.scene.position.x = 2.3;
-        pointLight.position.z = -11.3;
-        pointLight.position.x = 3;
+        loadedModel.scene.position.z = -15;
+        loadedModel.scene.position.x = 2.8;
+        pointLight.position.z = -15.3;
+        pointLight.position.x = 3.5;
         break;
       case "tree":
-        tree.position.z = -15;
-        tree.position.x = 2;
+        tree.position.z = -20;
+        tree.position.x = 2.8;
+        break;
+      case "tree2":
+        tree2.position.z = -18;
+        tree2.position.x = 7;
         break;
     }
   }
@@ -325,17 +340,23 @@ function posOutObj(outObj) {
 
 function movingOutObj() {
   if (loadedModel && loadedModel.scene) {
+    // Check to front
     if (loadedModel.scene.position.z > 10) {
       posOutObj("poste");
     }
+    if (tree.position.z > 7) {
+      posOutObj("tree");
+    }
+    if (tree2.position.z > 7.5) {
+      posOutObj("tree2");
+    }
+
+    // Moving
     loadedModel.scene.position.z += objSpeed;
     pointLight.position.z += objSpeed;
+    tree.position.z += objSpeed;
+    tree2.position.z += objSpeed;
   }
-
-  if (tree.position.z > 7) {
-    posOutObj("tree");
-  }
-  tree.position.z += objSpeed;
 }
 
 // ------------------------------------
@@ -360,23 +381,31 @@ function start() {
 
 start();
 
-function createTree() {
+function createTrunkMaterial() {
+  const trunkMaterial = new THREE.MeshPhongMaterial({
+    map: new THREE.TextureLoader().load("./assets/textures/tree.jpg"),
+  });
+  return trunkMaterial;
+}
+
+function createFolhaMaterial() {
+  const folhaMaterial = new THREE.MeshPhongMaterial({
+    map: new THREE.TextureLoader().load("./assets/textures/folha.jpg"),
+  });
+  return folhaMaterial;
+}
+
+function createSquareTree() {
   var tree;
 
   var geometry = new THREE.BoxGeometry(1, 1, 1);
+  var trunk = new THREE.CylinderGeometry(0.2, 0.4, 4, 4);
 
-  const leafTexture = new THREE.TextureLoader().load(
-    "./assets/textures/folha.jpg"
-  );
-  const troncoTexture = new THREE.TextureLoader().load(
-    "./assets/textures/tree.jpg"
-  );
-
-  var folhaMaterial = new THREE.MeshPhongMaterial({ map: leafTexture });
-  var troncoMaterial = new THREE.MeshPhongMaterial({ map: troncoTexture });
-  var tronco = new THREE.Mesh(geometry, troncoMaterial);
-  tronco.position.set(0, 0, 0);
-  tronco.scale.set(0.3, 1.5, 0.3);
+  var folhaMaterial = createFolhaMaterial();
+  var troncoMaterial = createTrunkMaterial();
+  var tronco = new THREE.Mesh(trunk, troncoMaterial);
+  tronco.position.set(0, 0.5, 0);
+  tronco.scale.set(0.5, 0.8, 0.5);
 
   var folha01 = new THREE.Mesh(geometry, folhaMaterial);
   folha01.position.set(0.5, 1.6, 0.5);
@@ -409,6 +438,43 @@ function createTree() {
 
   tree.rotation.y = 1;
   tree.position.z = 0;
+  tree.position.y = -0.2;
 
   return tree;
+}
+
+function createTree() {
+  const tree2 = new THREE.Group();
+
+  // Criação da geometria da árvore
+  const trunkGeometry = new THREE.CylinderGeometry(0.2, 0.3, 4, 8); // Geometria do tronco
+  const leafGeometry = new THREE.SphereGeometry(1.3, 8, 6); // Geometria da folha
+  const leafGeometry_s = new THREE.SphereGeometry(0.8, 4, 8); //Geomatria da folha pequena
+
+  // Criação dos materiais
+  const trunkMaterial = createTrunkMaterial();
+  const leafMaterial = createFolhaMaterial();
+
+  // Criação das malhas
+  const trunkMesh = new THREE.Mesh(trunkGeometry, trunkMaterial); // Malha do tronco
+  const leafMesh1 = new THREE.Mesh(leafGeometry, leafMaterial); // Malha da primeira folha
+  const leafMesh2 = new THREE.Mesh(leafGeometry, leafMaterial); // Malha da segunda folha
+  const leafMesh3 = new THREE.Mesh(leafGeometry_s, leafMaterial); // Malha da terceira folha
+
+  // Posicionamento das malhas
+  trunkMesh.position.set(-3.5, 0, 0); // Posição do tronco
+  leafMesh1.position.set(-4, 1.6, 0); // Posição da primeira folha
+  leafMesh2.position.set(-3, 1.9, 0); // Posição da segunda folha
+  leafMesh3.position.set(-3, 0.6, 0); //Posição da terceira folha
+
+  // Adição das malhas à cena
+  tree2.add(trunkMesh);
+  tree2.add(leafMesh1);
+  tree2.add(leafMesh2);
+  tree2.add(leafMesh3);
+
+  tree2.position.x = 0;
+  tree2.position.y = 0.5;
+
+  return tree2;
 }
