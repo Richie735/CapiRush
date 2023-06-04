@@ -465,6 +465,7 @@ window.addEventListener("keydown", (event) => {
 let score = 0;
 var point = create_points();
 point.scale.set(1.2, 1.2, 1.2);
+point.position.z = 5;
 scene.add(point);
 
 function movingPoint() {
@@ -491,25 +492,27 @@ function updateScore() {
 var ball = createBall();
 scene.add(ball);
 ball.position.x = -1.63;
+ball.position.z = 5;
 
 // Carro Vermelho
 var car = createCar(0);
+car.position.z += 6
 const roda1 = createRoda();
 roda1.scale.set(0.9, 0.9, 0.9);
 roda1.position.x = -1.45;
-roda1.position.z = 0.6;
+roda1.position.z = 6.6;
 const roda2 = createRoda();
 roda2.scale.set(0.9, 0.9, 0.9);
 roda2.position.x = -1.45;
-roda2.position.z = -0.6;
+roda2.position.z = 5.4;
 const roda3 = createRoda();
 roda3.scale.set(0.9, 0.9, 0.9);
 roda3.position.x = -0.35;
-roda3.position.z = 0.6;
+roda3.position.z = 6.6;
 const roda4 = createRoda();
 roda4.scale.set(0.9, 0.9, 0.9);
 roda4.position.x = -0.35;
-roda4.position.z = -0.6;
+roda4.position.z = 5.4;
 scene.add(car);
 scene.add(roda1);
 scene.add(roda2);
@@ -518,22 +521,23 @@ scene.add(roda4);
 
 // Carro Verde
 var carGreen = createCar(1);
+carGreen.position.z += 7;
 const rodaGreen1 = createRoda();
 rodaGreen1.scale.set(0.9, 0.9, 0.9);
 rodaGreen1.position.x = -1.45;
-rodaGreen1.position.z = 0.6;
+rodaGreen1.position.z = 7.6;
 const rodaGreen2 = createRoda();
 rodaGreen2.scale.set(0.9, 0.9, 0.9);
 rodaGreen2.position.x = -1.45;
-rodaGreen2.position.z = -0.6;
+rodaGreen2.position.z = 6.4;
 const rodaGreen3 = createRoda();
 rodaGreen3.scale.set(0.9, 0.9, 0.9);
 rodaGreen3.position.x = -0.35;
-rodaGreen3.position.z = 0.6;
+rodaGreen3.position.z = 7.6;
 const rodaGreen4 = createRoda();
 rodaGreen4.scale.set(0.9, 0.9, 0.9);
 rodaGreen4.position.x = -0.35;
-rodaGreen4.position.z = -0.6;
+rodaGreen4.position.z = 6.4;
 scene.add(carGreen);
 scene.add(rodaGreen1);
 scene.add(rodaGreen2);
@@ -543,7 +547,7 @@ scene.add(rodaGreen4);
 // Roda
 var roda = createRoda();
 scene.add(roda);
-roda.position.set(-3.6, -0.4, 0);
+roda.position.set(-3.6, -0.4, 5);
 roda.scale.set(2, 2, 2);
 
 // ------------------------------------
