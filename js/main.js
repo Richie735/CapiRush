@@ -479,22 +479,9 @@ function movingPoint() {
   point.rotation.x += objSpeed;
 }
 
-function  updateScore() {
+function updateScore() {
   const scoreElement = document.getElementById("atualScore");
   scoreElement.innerText = "Score: " + score;
-}
-
-function checkPointCollision(capiPosition) {
-  const distance = capiPosition.distanceTo(point.position);
-
-  if (distance < 0.5) {
-    score += 1;
-    point.position.z = 5;
-    if (score % 5 == 0) {
-      objSpeed += 0.01;
-    }
-    updateScore();
-  }
 }
 
 // ------------------------------------
@@ -844,6 +831,41 @@ function movingOutObj() {
 }
 
 // ------------------------------------
+
+// Check Collisions --------------------
+
+function checkPlayerCollision(playerPosition) {
+  const objectsToCheck = [
+    car.position,
+    carGreen.position,
+    roda.position,
+    ball.position,
+  ];
+  const collisionDistanceThreshold = 0.5;
+
+  for (const objectPosition of objectsToCheck) {
+    if (
+      playerPosition.distanceTo(objectPosition) < collisionDistanceThreshold
+    ) {
+      capi.position.y = 2;
+      //window.location.href = "../gameover.html";
+      break;
+    }
+  }
+
+  if (playerPosition.distanceTo(point.position) < collisionDistanceThreshold) {
+    score += 1;
+    point.position.z = 5;
+    if (score % 5 == 0) {
+      objSpeed += 0.01;
+    }
+    updateScore();
+  }
+}
+
+
+// ------------------------------------
+
 // Boot + Game Loop -------------------
 function animate() {
   requestAnimationFrame(animate); // First
@@ -855,7 +877,7 @@ function animate() {
     movingPoint();
     movingOutObj();
 
-    checkPointCollision(capi.position);
+    checkPlayerCollision(capi.position);
   }
   // ------------------------------------
 
@@ -930,7 +952,7 @@ function create_points() {
     })
   );
 
-  point.position.set(0, -0.8 , 0);
+  point.position.set(0, -0.8, 0);
 
   return point;
 }
