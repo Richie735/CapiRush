@@ -460,16 +460,16 @@ window.addEventListener("keydown", (event) => {
 
 // ------------------------------------
 
-
 // Point ------------------------------
 
+let score = 0;
 var point = create_points();
 point.scale.set(1.2, 1.2, 1.2);
 scene.add(point);
 
-function movingPoint(){
+function movingPoint() {
   var positions = [-1.65, 0, 1.65];
-  if (point.position.z > 10){
+  if (point.position.z > 10) {
     var ranPos = Math.floor(Math.random() * 3);
     point.position.x = positions[ranPos];
     point.position.z = -15;
@@ -477,11 +477,27 @@ function movingPoint(){
 
   point.position.z += objSpeed;
   point.rotation.x += objSpeed;
+}
 
+function  updateScore() {
+  const scoreElement = document.getElementById("atualScore");
+  scoreElement.innerText = "Score: " + score;
+}
+
+function checkPointCollision(capiPosition) {
+  const distance = capiPosition.distanceTo(point.position);
+
+  if (distance < 0.5) {
+    score += 1;
+    point.position.z = 5;
+    if (score % 5 == 0) {
+      objSpeed += 0.01;
+    }
+    updateScore();
+  }
 }
 
 // ------------------------------------
-
 
 // Add Obstacles ----------------------
 // Bola
@@ -828,7 +844,7 @@ function movingOutObj() {
 }
 
 // ------------------------------------
-
+// Boot + Game Loop -------------------
 function animate() {
   requestAnimationFrame(animate); // First
 
@@ -838,6 +854,8 @@ function animate() {
     movingObstacles();
     movingPoint();
     movingOutObj();
+
+    checkPointCollision(capi.position);
   }
   // ------------------------------------
 
@@ -845,6 +863,8 @@ function animate() {
 }
 
 function start() {
+  score = 0;
+  updateScore();
   camSetup();
   scenarioSetup();
   lightSetup();
@@ -852,6 +872,9 @@ function start() {
 }
 
 start();
+// ------------------------------------
+
+// Create Functions -------------------
 
 function createSkateWheel() {
   const wheel = new THREE.Mesh(
@@ -899,7 +922,7 @@ function createSkate() {
   return skate;
 }
 
-function create_points(){
+function create_points() {
   const point = new THREE.Mesh(
     new THREE.SphereBufferGeometry(0.15, 16, 16),
     new THREE.MeshPhongMaterial({
@@ -907,7 +930,7 @@ function create_points(){
     })
   );
 
-  point.position.set(0,-1.1,0);
+  point.position.set(0, -0.8 , 0);
 
   return point;
 }
@@ -1144,3 +1167,4 @@ function createBush(scene) {
 
   return tree3;
 }
+// ------------------------------------
