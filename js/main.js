@@ -460,6 +460,29 @@ window.addEventListener("keydown", (event) => {
 
 // ------------------------------------
 
+
+// Point ------------------------------
+
+var point = create_points();
+point.scale.set(1.2, 1.2, 1.2);
+scene.add(point);
+
+function movingPoint(){
+  var positions = [-1.65, 0, 1.65];
+  if (point.position.z > 10){
+    var ranPos = Math.floor(Math.random() * 3);
+    point.position.x = positions[ranPos];
+    point.position.z = -15;
+  }
+
+  point.position.z += objSpeed;
+  point.rotation.x += objSpeed;
+
+}
+
+// ------------------------------------
+
+
 // Add Obstacles ----------------------
 // Bola
 var ball = createBall();
@@ -813,6 +836,7 @@ function animate() {
   if (loadedModel && loadedModel.scene && capi) {
     checkPlayerMovement();
     movingObstacles();
+    movingPoint();
     movingOutObj();
   }
   // ------------------------------------
@@ -873,6 +897,19 @@ function createSkate() {
   skate.gravity = gravForce;
 
   return skate;
+}
+
+function create_points(){
+  const point = new THREE.Mesh(
+    new THREE.SphereBufferGeometry(0.15, 16, 16),
+    new THREE.MeshPhongMaterial({
+      map: new THREE.TextureLoader().load("assets/textures/laranja.jpg"),
+    })
+  );
+
+  point.position.set(0,-1.1,0);
+
+  return point;
 }
 
 function createBall() {
