@@ -304,29 +304,44 @@ scene.add(skate);
 
 // Player Movement --------------------
 
-var movementSpeed = 0.02;
+var movementSpeed = 0.1;
 var moveLeft = false;
 var moveRight = false;
 var targetX = 0;
 
+var jumpHeight = 2;
+var jumpDuration = 500;
+var isJumping = false;
+var targetY = -1.1;
+
 function playerMovement(goTo) {
   switch (goTo) {
     case "left":
-      if (capi.position.x == 1.65) {
+      if (capi.position.x === 1.65) {
         moveLeft = true;
         targetX = 0;
-      } else if (capi.position.x == 0) {
+      } else if (capi.position.x === 0) {
         moveLeft = true;
         targetX = -1.65;
       }
       break;
     case "right":
-      if (capi.position.x == -1.65) {
+      if (capi.position.x === -1.65) {
         moveRight = true;
         targetX = 0;
-      } else if (capi.position.x == 0) {
+      } else if (capi.position.x === 0) {
         moveRight = true;
         targetX = 1.65;
+      }
+      break;
+    case "jump":
+      if(!isJumping) {
+        isJumping = true;
+        targetY = capi.position.y + jumpHeight;        
+        setTimeout(function () {
+          targetY = -1.1;
+          isJumping = false;
+        }, jumpDuration);
       }
       break;
   }
@@ -348,13 +363,27 @@ function checkPlayerMovement() {
     capi.position.x += direction * movementSpeed;
     skate.position.x += direction * movementSpeed;
 
-    // Clamp capi's x-position within the target bounds
     if (direction > 0 && capi.position.x > targetX) {
       capi.position.x = targetX;
       skate.position.x = targetX;
     } else if (direction < 0 && capi.position.x < targetX) {
       capi.position.x = targetX;
       skate.position.x = targetX;
+    }
+  }
+
+  if (capi.position.y !== targetY) {
+    var directionY = Math.sign(targetY - capi.position.y);
+    capi.position.y += directionY * movementSpeed;
+    skate.position.y += directionY * movementSpeed;
+
+    // Clamp capi's y-position within the target bounds
+    if (directionY > 0 && capi.position.y > targetY) {
+      capi.position.y = targetY;
+      skate.position.y = targetY
+    } else if (directionY < 0 && capi.position.y < targetY) {
+      capi.position.y = targetY;
+      skate.position.y = targetY
     }
   }
 }
@@ -368,6 +397,10 @@ window.addEventListener("keyup", (event) => {
     case "KeyD":
     case "ArrowRight":
       playerMovement("right");
+      break;
+    case "KeyW":
+    case "ArrowUp":
+      playerMovement("jump");
       break;
   }
 });
