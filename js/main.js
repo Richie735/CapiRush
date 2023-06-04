@@ -304,7 +304,7 @@ scene.add(skate);
 
 // Player Movement --------------------
 
-var movementSpeed = 0.1;
+var movementSpeed = 0.05;
 var moveLeft = false;
 var moveRight = false;
 var targetX = 0;
@@ -320,24 +320,32 @@ function playerMovement(goTo) {
       if (capi.position.x === 1.65) {
         moveLeft = true;
         targetX = 0;
+        capi.rotation.y = Math.PI + 0.45;
+        skate.rotation.y = +0.45;
       } else if (capi.position.x === 0) {
         moveLeft = true;
         targetX = -1.65;
+        capi.rotation.y = Math.PI + 0.45;
+        skate.rotation.y = +0.45;
       }
       break;
     case "right":
       if (capi.position.x === -1.65) {
         moveRight = true;
         targetX = 0;
+        capi.rotation.y = Math.PI - 0.45;
+        skate.rotation.y = -0.45;
       } else if (capi.position.x === 0) {
         moveRight = true;
         targetX = 1.65;
+        capi.rotation.y = Math.PI - 0.45;
+        skate.rotation.y = -0.45;
       }
       break;
     case "jump":
-      if(!isJumping) {
+      if (!isJumping) {
         isJumping = true;
-        targetY = capi.position.y + jumpHeight;        
+        targetY = capi.position.y + jumpHeight;
         setTimeout(function () {
           targetY = -1.1;
           isJumping = false;
@@ -363,12 +371,14 @@ function checkPlayerMovement() {
     capi.position.x += direction * movementSpeed;
     skate.position.x += direction * movementSpeed;
 
-    if (direction > 0 && capi.position.x > targetX) {
+    if (
+      (direction > 0 && capi.position.x > targetX) ||
+      (direction < 0 && capi.position.x < targetX)
+    ) {
       capi.position.x = targetX;
       skate.position.x = targetX;
-    } else if (direction < 0 && capi.position.x < targetX) {
-      capi.position.x = targetX;
-      skate.position.x = targetX;
+      capi.rotation.y = Math.PI;
+      skate.rotation.y = 0;
     }
   }
 
@@ -377,14 +387,18 @@ function checkPlayerMovement() {
     capi.position.y += directionY * movementSpeed;
     skate.position.y += directionY * movementSpeed;
 
-    // Clamp capi's y-position within the target bounds
     if (directionY > 0 && capi.position.y > targetY) {
       capi.position.y = targetY;
-      skate.position.y = targetY
+      skate.position.y = targetY;
     } else if (directionY < 0 && capi.position.y < targetY) {
       capi.position.y = targetY;
-      skate.position.y = targetY
+      skate.position.y = targetY;
     }
+  }
+
+  if (moveLeft === false && moveRight === false) {
+    capi.rotation.y = Math.PI;
+    skate.rotation.y = 0;
   }
 }
 
