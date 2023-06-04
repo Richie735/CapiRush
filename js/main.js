@@ -277,6 +277,37 @@ ttfLoader.load("assets/fonts/Bungee-Regular.ttf", (json) => {
 
 // ------------------------------------
 
+
+// Audio ------------------------------
+
+const audioLoader = new THREE.AudioLoader();
+const listener = new THREE.AudioListener();
+const audio = new THREE.Audio(listener);
+const audio_point = new THREE.Audio(listener);
+const audio_punch = new THREE.Audio(listener);
+
+audioLoader.load("../assets/audio/song18.mp3", function (buffer) {
+  audio.setBuffer(buffer);
+  audio.setLoop(true);
+  audio.setVolume(0.03);
+  audio.play();
+});
+
+audioLoader.load("../assets/audio/point.wav", function (buffer) {
+  audio_point.setBuffer(buffer);
+  audio_point.setLoop(false);
+  audio_point.setVolume(0.5);
+});
+
+audioLoader.load("../assets/audio/punch.wav", function (buffer) {
+  audio_punch.setBuffer(buffer);
+  audio_punch.setLoop(false);
+  audio_punch.setVolume(0.5);
+});
+
+// ------------------------------------
+
+
 // Add Player -------------------------
 
 var loader = new FBXLoader();
@@ -851,6 +882,7 @@ function checkPlayerCollision(playerPosition) {
     if (
       playerPosition.distanceTo(objectPosition) < collisionDistanceThreshold
     ) {
+      audio_punch.play();
       capi.position.y = 2;
       //window.location.href = "../gameover.html";
       break;
@@ -858,6 +890,7 @@ function checkPlayerCollision(playerPosition) {
   }
 
   if (playerPosition.distanceTo(point.position) < collisionDistanceThreshold) {
+    audio_point.play();
     score += 1;
     point.position.z = 5;
     if (score % 5 == 0) {
