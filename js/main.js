@@ -309,10 +309,13 @@ var moveLeft = false;
 var moveRight = false;
 var targetX = 0;
 
-var jumpHeight = 2;
-var jumpDuration = 500;
+var jumpHeight = 2.5;
+var jumpHeightSkate = 1.5;
+var heightRotate = 0.5;
+var jumpDuration = 700;
 var isJumping = false;
 var targetY = -1.1;
+var targetYSkate = -1.1;
 
 function playerMovement(goTo) {
   switch (goTo) {
@@ -346,9 +349,15 @@ function playerMovement(goTo) {
       if (!isJumping) {
         isJumping = true;
         targetY = capi.position.y + jumpHeight;
+        targetYSkate = skate.position.y + jumpHeightSkate;
+        capi.rotation.x = Math.PI * 2;
+        skate.rotation.y = Math.PI * 2;
         setTimeout(function () {
           targetY = -1.1;
+          targetYSkate = -1.1;
           isJumping = false;
+          capi.rotation.x = 0;
+          skate.rotation.y = 0;
         }, jumpDuration);
       }
       break;
@@ -356,6 +365,7 @@ function playerMovement(goTo) {
 }
 
 function checkPlayerMovement() {
+  // Horizontal Movement
   if (moveLeft && capi.position.x > -1.65) {
     capi.position.x -= movementSpeed;
     skate.position.x -= movementSpeed;
@@ -382,23 +392,37 @@ function checkPlayerMovement() {
     }
   }
 
-  if (capi.position.y !== targetY) {
-    var directionY = Math.sign(targetY - capi.position.y);
-    capi.position.y += directionY * movementSpeed;
-    skate.position.y += directionY * movementSpeed;
-
-    if (directionY > 0 && capi.position.y > targetY) {
-      capi.position.y = targetY;
-      skate.position.y = targetY;
-    } else if (directionY < 0 && capi.position.y < targetY) {
-      capi.position.y = targetY;
-      skate.position.y = targetY;
-    }
-  }
-
   if (moveLeft === false && moveRight === false) {
     capi.rotation.y = Math.PI;
     skate.rotation.y = 0;
+  }
+
+  // Vertical Movement
+  if (capi.position.y !== targetY) {
+    var directionY = Math.sign(targetY - capi.position.y);
+    capi.position.y += directionY * movementSpeed;
+
+    if (directionY > 0 && capi.position.y > targetY) {
+      capi.position.y = targetY;
+    } else if (directionY < 0 && capi.position.y < targetY) {
+      capi.position.y = targetY;
+    }
+  }
+  if (skate.position.y !== targetYSkate) {
+    var directionYSkate = Math.sign(targetYSkate - skate.position.y);
+    skate.position.y += directionYSkate * movementSpeed;
+
+    if (directionYSkate > 0 && skate.position.y > targetYSkate) {
+      skate.position.y = targetYSkate;
+    } else if (directionYSkate < 0 && skate.position.y < targetYSkate) {
+      skate.position.y = targetYSkate;
+    }
+  }
+
+  // Rotate capi and skate during the jump
+  if (isJumping) {
+    if (capi.position.y > heightRotate) capi.rotation.x += 0.089;
+    skate.rotation.y += 0.093;
   }
 }
 
