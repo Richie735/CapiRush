@@ -4,6 +4,7 @@ import "../css/style.css";
 import * as THREE from "three";
 import * as dat from "dat.gui";
 
+import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { TTFLoader } from "three/examples/jsm/loaders/TTFLoader";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
@@ -11,6 +12,7 @@ import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 // ------------------------------------
 
 // Init Setup -------------------------
+const gravForce = 0.05;
 const gui = new dat.GUI();
 const scene = new THREE.Scene();
 const render = new THREE.WebGLRenderer({
@@ -51,7 +53,7 @@ var camera = new THREE.PerspectiveCamera(
 var camPos = 1;
 
 function camSetup() {
-  camera.position.set(0, 0, 5.3);
+  camera.position.set(0,0, 5.3);
 }
 
 window.addEventListener("keydown", (event) => {
@@ -275,6 +277,31 @@ ttfLoader.load("assets/fonts/Bungee-Regular.ttf", (json) => {
 
 // ------------------------------------
 
+// Add Player -------------------------
+var loader = new FBXLoader();
+
+var capi;
+loader.load("./assets/models/capi/Capybara.fbx", function (object) {
+  object.scale.set(0.0025, 0.0025, 0.0025);
+  object.position.set(0, -1.1, 3);
+  object.rotation.y = Math.PI;
+
+  object.bottom = object.position.y - object.height / 2;
+  object.top = object.position.y + object.height / 2;
+  object.velocity = { x: 0, y: 0, z: 0 };
+  object.gravity = gravForce;
+  object.castShadow = true;
+
+  capi = object;
+  scene.add(capi);
+});
+
+var skate = createSkate();
+scene.add(skate);
+
+
+// ------------------------------------
+
 // Add Obstacles ----------------------
 // Bola
 var ball = createBall();
@@ -331,7 +358,7 @@ scene.add(rodaGreen4);
 
 // Roda
 var roda = createRoda();
-//scene.add(roda);
+scene.add(roda);
 roda.position.set(-3.6, -0.4, 0);
 roda.scale.set(2, 2, 2);
 
@@ -645,16 +672,62 @@ function start() {
 
 start();
 
+function createSkateWheel() {
+  const wheel = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.08, 0.08, 0.1, 32),
+    new THREE.MeshPhongMaterial({ color: 0x000000 })
+  );
+  return wheel;
+}
+
+function createSkate() {
+  const skate = new THREE.Group();
+
+  const skateBase = new THREE.Mesh(
+    new THREE.BoxGeometry(0.65, 0.05, 0.9),
+    new THREE.MeshPhongMaterial({ color: 0x68478d })
+  );
+  skate.add(skateBase);
+
+  const borderGeometry = new THREE.CylinderGeometry(0.325, 0.325, 0.05);
+  const borderMaterial = new THREE.MeshPhongMaterial({ color: 0x68478d });
+  const border1 = new THREE.Mesh(borderGeometry, borderMaterial);
+  border1.position.set(0, 0, -0.4);
+  const border2 = new THREE.Mesh(borderGeometry, borderMaterial);
+  border2.position.set(0, 0, 0.4);
+  skate.add(border1, border2);
+
+  const wheel1 = createSkateWheel();
+  wheel1.position.set(0.3, -0.1, -0.3);
+  wheel1.rotateZ(Math.PI / 2);
+  const wheel2 = createSkateWheel();
+  wheel2.position.set(0.3, -0.1, 0.3);
+  wheel2.rotateZ(Math.PI / 2);
+  const wheel3 = createSkateWheel();
+  wheel3.position.set(-0.3, -0.1, -0.3);
+  wheel3.rotateZ(Math.PI / 2);
+  const wheel4 = createSkateWheel();
+  wheel4.position.set(-0.3, -0.1, 0.3);
+  wheel4.rotateZ(Math.PI / 2);
+  skate.add(wheel1, wheel2, wheel3, wheel4);
+
+  skate.position.set(0, -1.1, 3);
+  skate.scale.set(0.8, 0.8, 0.8);
+  skate.gravity = gravForce;
+
+
+  return skate;
+}
+
 function createBall() {
-  const geometry = new THREE.SphereBufferGeometry(0.5, 16, 16);
+  const ball = new THREE.Mesh(
+    new THREE.SphereBufferGeometry(0.5, 16, 16),
+    new THREE.MeshPhongMaterial({
+      map: new THREE.TextureLoader().load("assets/textures/smile.png"),
+    })
+  );
 
-  const material = new THREE.MeshPhongMaterial({
-    map: new THREE.TextureLoader().load("assets/textures/smile.png"),
-  });
-
-  const ball = new THREE.Mesh(geometry, material);
   ball.rotateY(-Math.PI / 2);
-
   ball.position.set(0, -0.75, 0);
 
   return ball;
@@ -663,16 +736,16 @@ function createBall() {
 function createRoda() {
   const roda = new THREE.Group();
 
-  const geometry = new THREE.CylinderGeometry(1, 1, 0.5, 32);
-  const jante = new THREE.CylinderGeometry(0.5, 0.5, 0.5, 32);
-
-  const material = new THREE.MeshPhongMaterial({
-    map: new THREE.TextureLoader().load("./assets/textures/tire.jpg"),
-  });
-  const material_2 = new THREE.MeshPhongMaterial({ color: 0x1b1e23 });
-
-  const tire = new THREE.Mesh(geometry, material);
-  const tire2 = new THREE.Mesh(jante, material_2);
+  const tire = new THREE.Mesh(
+    new THREE.CylinderGeometry(1, 1, 0.5, 32),
+    new THREE.MeshPhongMaterial({
+      map: new THREE.TextureLoader().load("./assets/textures/tire.jpg"),
+    })
+  );
+  const tire2 = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.5, 0.5, 0.5, 32),
+    new THREE.MeshPhongMaterial({ color: 0x1b1e23 })
+  );
 
   tire.position.set(0, -1.02, 0);
   tire.scale.set(0.4, 0.4, 0.4);
