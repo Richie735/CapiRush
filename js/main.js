@@ -53,7 +53,7 @@ var camera = new THREE.PerspectiveCamera(
 var camPos = 1;
 
 function camSetup() {
-  camera.position.set(0,0, 5.3);
+  camera.position.set(0, 0, 5.3);
 }
 
 window.addEventListener("keydown", (event) => {
@@ -278,6 +278,7 @@ ttfLoader.load("assets/fonts/Bungee-Regular.ttf", (json) => {
 // ------------------------------------
 
 // Add Player -------------------------
+
 var loader = new FBXLoader();
 
 var capi;
@@ -299,6 +300,92 @@ loader.load("./assets/models/capi/Capybara.fbx", function (object) {
 var skate = createSkate();
 scene.add(skate);
 
+// ------------------------------------
+
+// Player Movement --------------------
+
+var movementSpeed = 0.02;
+var moveLeft = false;
+var moveRight = false;
+var targetX = 0;
+
+function playerMovement(goTo) {
+  switch (goTo) {
+    case "left":
+      if (capi.position.x == 1.65) {
+        moveLeft = true;
+        targetX = 0;
+      } else if (capi.position.x == 0) {
+        moveLeft = true;
+        targetX = -1.65;
+      }
+      break;
+    case "right":
+      if (capi.position.x == -1.65) {
+        moveRight = true;
+        targetX = 0;
+      } else if (capi.position.x == 0) {
+        moveRight = true;
+        targetX = 1.65;
+      }
+      break;
+  }
+}
+
+function checkPlayerMovement() {
+  if (moveLeft && capi.position.x > -1.65) {
+    capi.position.x -= movementSpeed;
+    skate.position.x -= movementSpeed;
+  }
+
+  if (moveRight && capi.position.x < 1.65) {
+    capi.position.x += movementSpeed;
+    skate.position.x += movementSpeed;
+  }
+
+  if (capi.position.x !== targetX) {
+    var direction = Math.sign(targetX - capi.position.x);
+    capi.position.x += direction * movementSpeed;
+    skate.position.x += direction * movementSpeed;
+
+    // Clamp capi's x-position within the target bounds
+    if (direction > 0 && capi.position.x > targetX) {
+      capi.position.x = targetX;
+      skate.position.x = targetX;
+    } else if (direction < 0 && capi.position.x < targetX) {
+      capi.position.x = targetX;
+      skate.position.x = targetX;
+    }
+  }
+}
+
+window.addEventListener("keyup", (event) => {
+  switch (event.code) {
+    case "KeyA":
+    case "ArrowLeft":
+      playerMovement("left");
+      break;
+    case "KeyD":
+    case "ArrowRight":
+      playerMovement("right");
+      break;
+  }
+});
+
+window.addEventListener("keydown", (event) => {
+  switch (event.code) {
+    case "KeyA":
+    case "ArrowLeft":
+      moveLeft = false;
+      if (!moveRight) targetX = 0;
+      break;
+    case "KeyD":
+    case "ArrowRight":
+      moveRight = false;
+      if (!moveLeft) targetX = 0;
+      break;
+  }
+});
 
 // ------------------------------------
 
@@ -624,28 +711,26 @@ function posOutObj(outObj) {
 }
 
 function movingOutObj() {
-  if (loadedModel && loadedModel.scene) {
-    // Check to front
-    if (loadedModel.scene.position.z > 10) {
-      posOutObj("poste");
-    }
-    if (tree.position.z > 7) {
-      posOutObj("tree");
-    }
-    if (tree2.position.z > 7.5) {
-      posOutObj("tree2");
-    }
-    if (bush.position.z > 7.5) {
-      posOutObj("bush");
-    }
-
-    // Moving
-    loadedModel.scene.position.z += objSpeed;
-    pointLight.position.z += objSpeed;
-    tree.position.z += objSpeed;
-    tree2.position.z += objSpeed;
-    bush.position.z += objSpeed;
+  // Check to front
+  if (loadedModel.scene.position.z > 10) {
+    posOutObj("poste");
   }
+  if (tree.position.z > 7) {
+    posOutObj("tree");
+  }
+  if (tree2.position.z > 7.5) {
+    posOutObj("tree2");
+  }
+  if (bush.position.z > 7.5) {
+    posOutObj("bush");
+  }
+
+  // Moving
+  loadedModel.scene.position.z += objSpeed;
+  pointLight.position.z += objSpeed;
+  tree.position.z += objSpeed;
+  tree2.position.z += objSpeed;
+  bush.position.z += objSpeed;
 }
 
 // ------------------------------------
@@ -654,7 +739,8 @@ function animate() {
   requestAnimationFrame(animate); // First
 
   // ------------------------------------
-  if (loadedModel && loadedModel.scene) {
+  if (loadedModel && loadedModel.scene && capi) {
+    checkPlayerMovement();
     movingObstacles();
     movingOutObj();
   }
@@ -714,7 +800,6 @@ function createSkate() {
   skate.position.set(0, -1.1, 3);
   skate.scale.set(0.8, 0.8, 0.8);
   skate.gravity = gravForce;
-
 
   return skate;
 }
