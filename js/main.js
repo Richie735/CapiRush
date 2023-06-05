@@ -1,3 +1,116 @@
+/*
+------------------------------------------------------------------
+ ██████╗ █████╗ ██████╗ ██╗      ██████╗ ██╗   ██╗███████╗██╗  ██╗
+██╔════╝██╔══██╗██╔══██╗██║      ██╔══██╗██║   ██║██╔════╝██║  ██║
+██║     ███████║██████╔╝██║█████╗██████╔╝██║   ██║███████╗███████║
+██║     ██╔══██║██╔═══╝ ██║╚════╝██╔══██╗██║   ██║╚════██║██╔══██║
+╚██████╗██║  ██║██║     ██║      ██║  ██║╚██████╔╝███████║██║  ██║
+ ╚═════╝╚═╝  ╚═╝╚═╝     ╚═╝      ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝
+------------------------------------------------------------------                                                                  
+
+INDEX   //------------------------------------
+1.  Imports   //------------------------------
+    | Lines 041-052
+    | This is where we import all the libraries we need for the project.
+
+2.  Init Setup   //---------------------------
+    | Lines 041-052
+    | This is where we setup the initial some variables for the project.
+
+3.  Loading   //------------------------------
+    | Lines 041-052
+    | This is where we setup the loading screen for the game.
+
+4.  Resize Handler   //-----------------------
+    | Lines 041-052
+    | Here we make the renderer responsive to the window size.
+
+5.  Camera Setup   //-------------------------
+    | Lines 041-052
+    | Here we setup and handle the cameras for the game.
+
+6.  Scenario   //-----------------------------
+    | Lines 041-052
+    | Here we setup the scenario for the game.
+    | This includes the skybox, the road and the walkway.
+
+7.  Lights   //-------------------------------
+    | Lines 041-052
+    | Here we setup the lights for the game.
+
+8.  Text Mesh   //----------------------------
+    | Lines 041-052
+    | Here we setup the text mesh for the game.
+
+9.  Audio   //--------------------------------
+    | Lines 041-052
+    | Here we setup the audio for the game.
+
+10. Add Player   //---------------------------
+    | Lines 041-052
+    | Here we setup the player for the game.
+    | Starting up the capybara model and the skateboard model.
+
+12. Player Movement   //----------------------
+    | Lines 041-052
+    | Here we setup the player movement for the game.
+
+13. Point   //--------------------------------
+    | Lines 041-052
+    | Here we setup the points for the game.
+
+14. Add Obstacles   //------------------------
+    | Lines 041-052
+    | Here we add the obstacles for the game.
+    | This includes the cars, the ball and tire.
+
+15. Obstacles Moving   //---------------------
+    | Lines 041-052
+    | Here we handle the obstacles movement for the game.
+    | We make them move and rotate along the road.
+    | And we also make them respawn randomly.
+
+16. Add Objects   //--------------------------
+    | Lines 041-052
+    | Here we add the objects of the walkway.
+
+17. Out Obj Moving   //-----------------------
+    | Lines 041-052
+    | Here we handle the movement of the objects of the walkway.
+    | We make them move along the walkway and make them respawn randomly.
+
+18. Check Collisions   //---------------------
+    | Lines 041-052
+    | Here we check the collisions for the game.
+    | We check if the player collides with the obstacles.
+    | We check if the obstacles collide with each other.
+
+19. Day/Night Cycle   //----------------------
+    | Lines 041-052
+    | Here we setup the day/night cycle for the game.
+    | Handling the lights intensity and the timing.
+
+20. GUI   //----------------------------------
+    | Lines 041-052
+    | Here we setup the GUI for the game.
+    | Adding controls for the lights, cameras, day/night and collisions.
+
+21. Boot + Game Loop   //---------------------
+    | Lines 041-052
+    | Here we call the functions required for the game to start up 
+    | and the game loop to run.
+
+22. Create Functions   //---------------------
+    | Lines 041-052
+    | Here we have the functions that create the objects of the game.
+
+23. Gameover   //-----------------------------
+    | Lines 041-052
+    | Here we setup the gameover screen for the game.
+
+------------------------------------------------------------------
+*/
+
 // Imports ----------------------------
 import "../css/style.css";
 
@@ -12,12 +125,17 @@ import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 // ------------------------------------
 
 // Init Setup -------------------------
+
 const gravForce = 0.05;
 const gui = new dat.GUI();
 const scene = new THREE.Scene();
 const render = new THREE.WebGLRenderer({
   canvas: document.querySelector("#bg"),
 });
+render.setPixelRatio(window.devicePixelRatio);
+render.setSize(window.innerWidth, window.innerHeight);
+render.render(scene, camera);
+
 // ------------------------------------
 
 // Loading ----------------------------
@@ -58,6 +176,8 @@ function loadResources() {
       scene.remove(progressBar);
     }
   }, 50);
+
+  return true;
 }
 
 // ------------------------------------
@@ -136,14 +256,6 @@ window.addEventListener("keydown", (event) => {
       break;
   }
 });
-
-// ------------------------------------
-
-// Render Setup -----------------------
-
-render.setPixelRatio(window.devicePixelRatio);
-render.setSize(window.innerWidth, window.innerHeight);
-render.render(scene, camera);
 
 // ------------------------------------
 
@@ -352,7 +464,7 @@ window.addEventListener("keydown", (event) => {
 
 // ------------------------------------
 
-// Font Test---------------------------
+// Text Mesh --------------------------
 let textMesh;
 
 function createTextMesh(text) {
@@ -1045,7 +1157,7 @@ function movingOutObj() {
 // ------------------------------------
 
 // Check Collisions --------------------
-var collision = true; 
+var collision = true;
 
 function toggleCollision() {
   collision = !collision;
@@ -1162,6 +1274,83 @@ function dayNightCycle() {
 }
 // ------------------------------------
 
+// GUI --------------------------------
+
+const lightFolder = gui.addFolder("Luzes");
+var ambLightBt = {
+  add: function () {
+    toggleAmbientLight();
+  },
+};
+lightFolder.add(ambLightBt, "add").name("Key I -> Ambient Light");
+const dirLight = {
+  add: function () {
+    toggleDirectionalLight();
+  },
+};
+lightFolder.add(dirLight, "add").name("Key O -> Directional Light");
+var pointLightBt = {
+  add: function () {
+    togglePointLight();
+  },
+};
+lightFolder.add(pointLightBt, "add").name("Key P -> Point Light");
+var spotLightRedBt = {
+  add: function () {
+    toggleRedSpotlight();
+  },
+};
+lightFolder.add(spotLightRedBt, "add").name("Key K -> Red Car Light");
+var spotLightGreenBt = {
+  add: function () {
+    toggleGreenSpotlight();
+  },
+};
+lightFolder.add(spotLightGreenBt, "add").name("Key L -> Green Car Light");
+
+const cameraFolder = gui.addFolder("Câmera");
+var cameraBt = {
+  add: function () {
+    toggleCam();
+  },
+};
+cameraFolder.add(cameraBt, "add").name("Key C -> Toggle Camera");
+
+const dayFolder = gui.addFolder("Dia/Noite");
+var amanhecerBt = {
+  add: function () {
+    turnDay();
+  },
+};
+dayFolder.add(amanhecerBt, "add").name("Amanhecer");
+var dayLight = {
+  add: function () {
+    toggleDayLight();
+  },
+};
+dayFolder.add(dayLight, "add").name("Dia");
+var anoitecerBt = {
+  add: function () {
+    turnNight();
+  },
+};
+dayFolder.add(anoitecerBt, "add").name("Anoitecer");
+var nightLight = {
+  add: function () {
+    toggleNight();
+  },
+};
+dayFolder.add(nightLight, "add").name("Noite");
+
+const gameFolder = gui.addFolder("Jogo");
+var collBt = {
+  add: function () {
+    toggleCollision();
+  },
+};
+gameFolder.add(collBt, "add").name("Collision");
+// ------------------------------------~
+
 // Boot + Game Loop -------------------
 
 function animate() {
@@ -1173,7 +1362,7 @@ function animate() {
     movingObstacles();
     movingPoint();
     movingOutObj();
-    if(collision) checkPlayerCollision(capi.position);
+    if (collision) checkPlayerCollision(capi.position);
   }
   // ------------------------------------
 
@@ -1196,7 +1385,6 @@ function start() {
 
 start();
 // ------------------------------------
-
 
 // Create Functions -------------------
 
@@ -1516,8 +1704,7 @@ function createBush(scene) {
 
 // ------------------------------------
 
-
-// GAMEOVER ---------------------------
+// Gameover ---------------------------
 
 function gameOver() {
   removeTextMesh();
@@ -1556,83 +1743,4 @@ function gameOver() {
   toggleCam = false;
 }
 
-// ------------------------------------
-
-
-// GUI --------------------------------
-
-const lightFolder = gui.addFolder("Luzes");
-var ambLightBt = {
-  add: function () {
-    toggleAmbientLight();
-  },
-};
-lightFolder.add(ambLightBt, "add").name("Key I -> Ambient Light");
-const dirLight = {
-  add: function () {
-    toggleDirectionalLight();
-  },
-};
-lightFolder.add(dirLight, "add").name("Key O -> Directional Light");
-var pointLightBt = {
-  add: function () {
-    togglePointLight();
-  },
-};
-lightFolder.add(pointLightBt, "add").name("Key P -> Point Light");
-var spotLightRedBt = {
-  add: function () {
-    toggleRedSpotlight();
-  },
-};
-lightFolder.add(spotLightRedBt, "add").name("Key K -> Red Car Light");
-var spotLightGreenBt = {
-  add: function () {
-    toggleGreenSpotlight();
-  },
-};
-lightFolder.add(spotLightGreenBt, "add").name("Key L -> Green Car Light");
-
-const cameraFolder = gui.addFolder("Câmera");
-var cameraBt = {
-  add: function () {
-    toggleCam();
-  },
-};
-cameraFolder.add(cameraBt, "add").name("Key C -> Toggle Camera");
-
-const dayFolder = gui.addFolder("Dia/Noite");
-var amanhecerBt = {
-  add: function () {
-    turnDay();
-  },
-};
-dayFolder.add(amanhecerBt, "add").name("Amanhecer");
-var dayLight = {
-  add: function () {
-    toggleDayLight();
-  },
-};
-dayFolder.add(dayLight, "add").name("Dia");
-var anoitecerBt = {
-  add: function () {
-    turnNight();
-  },
-};
-dayFolder.add(anoitecerBt, "add").name("Anoitecer");
-var nightLight = {
-  add: function () {
-    toggleNight();
-  },
-};
-dayFolder.add(nightLight, "add").name("Noite");
-
-
-const gameFolder = gui.addFolder("Jogo");
-var collBt = {
-  add: function () {
-    toggleCollision();
-  }
-};
-gameFolder.add(collBt, "add").name("Collision");
 // ------------------------------------
