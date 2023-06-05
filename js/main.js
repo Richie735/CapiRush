@@ -56,38 +56,41 @@ function camSetup() {
   camera.position.set(0, 0, 5.3);
 }
 
+function toggleCam() {
+  if (camPos == 1) {
+    // Camera 2 - Orthographic - Longe Cima
+    scene.remove(camera);
+    const zoom = 50;
+    camera = new THREE.OrthographicCamera(
+      sizes.width / -2 / zoom,
+      sizes.width / 2 / zoom,
+      sizes.height / 2 / zoom,
+      sizes.height / -2 / zoom,
+      -10,
+      1000
+    );
+    camera.position.set(0, 1, 0);
+    camera.lookAt(0, 0, 0);
+    scene.add(camera);
+    camPos = 2;
+  } else if (camPos == 2) {
+    // Camera 1 - Perspective - Perto Tras
+    scene.remove(camera);
+    camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      10000
+    );
+    camera.position.set(0, 0, 5.3);
+    scene.add(camera);
+    camPos = 1;
+  }
+}
 window.addEventListener("keydown", (event) => {
   switch (event.code) {
     case "KeyC":
-      if (camPos == 1) {
-        // Camera 2 - Orthographic - Longe Cima
-        scene.remove(camera);
-        const zoom = 50;
-        camera = new THREE.OrthographicCamera(
-          sizes.width / -2 / zoom,
-          sizes.width / 2 / zoom,
-          sizes.height / 2 / zoom,
-          sizes.height / -2 / zoom,
-          -10,
-          1000
-        );
-        camera.position.set(0, 1, 0);
-        camera.lookAt(0, 0, 0);
-        scene.add(camera);
-        camPos = 2;
-      } else if (camPos == 2) {
-        // Camera 1 - Perspective - Perto Tras
-        scene.remove(camera);
-        camera = new THREE.PerspectiveCamera(
-          75,
-          window.innerWidth / window.innerHeight,
-          0.1,
-          10000
-        );
-        camera.position.set(0, 0, 5.3);
-        scene.add(camera);
-        camPos = 1;
-      }
+      toggleCam();
       break;
   }
 });
@@ -287,21 +290,56 @@ window.addEventListener("keydown", (event) => {
 const fontLoader = new FontLoader();
 const ttfLoader = new TTFLoader();
 
+var gg = true;
+
 ttfLoader.load("assets/fonts/Bungee-Regular.ttf", (json) => {
   // First parse the font.
   const BungeeFont = fontLoader.parse(json);
-  // Use parsed font as normal.
-  const textGeometry = new TextGeometry("CapiRush", {
+
+  const textMesh = new THREE.Mesh(new TextGeometry("CapiRush", {
     height: 0.3,
     size: 10,
     font: BungeeFont,
-  });
-  const textMaterial = new THREE.MeshNormalMaterial();
-  const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+  }), new THREE.MeshNormalMaterial());
   textMesh.position.x = -35;
   textMesh.position.y = 20;
   textMesh.position.z = -50;
+
   scene.add(textMesh);
+
+
+  ttfLoader.load("assets/fonts/Bungee-Regular.ttf", (json) => {
+    // First parse the font.
+    const BungeeFont = fontLoader.parse(json);
+    // Use parsed font as normal.
+
+    const textMesh = new THREE.Mesh(new TextGeometry("Game Over", {
+      height: 0.2,
+      size: 0.5,
+      font: BungeeFont,
+    }), new THREE.MeshNormalMaterial());
+
+    // Criar objetos mesh para os elementos do menu
+    const buttonMesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 1), new THREE.MeshBasicMaterial({ color: 0xff0000 }));
+
+    // Posicionar os elementos do menu na cena
+    buttonMesh.position.y = 1;
+    textMesh.position.y = -1;
+
+    scene.add(buttonMesh);
+    scene.add(textMesh);
+
+    // Lidar com interações do jogador
+    buttonMesh.addEventListener('click', () => {
+      // Ação a ser executada quando o botão for clicado
+      console.log('Botão Clicado!');
+    });
+
+    function title(){
+      
+    }
+
+  });
 });
 
 // ------------------------------------
@@ -912,8 +950,7 @@ function checkPlayerCollision(playerPosition) {
       collisionDistanceThreshold
     ) {
       audio_punch.play();
-      capi.position.y = 2;
-      //window.location.href = "../gameover.html";
+      gameOver();
       break;
     }
   }
@@ -1326,3 +1363,22 @@ function createBush(scene) {
   return tree3;
 }
 // ------------------------------------
+
+// ----------------- GAMEOVER ----------------- //
+function gameOver() {
+  toggleCam = false;
+  objSpeed = 0;
+  const objetos = [car, carGreen, rodaGreen1, rodaGreen2, rodaGreen3, rodaGreen4, ball, roda, roda1, roda2, roda3, roda4, point]
+
+  for (const objeto of objetos) {
+    scene.remove(objeto);
+  }
+
+  if (capi.position.x > 0) {
+    playerMovement("left");
+  } else if (capi.position.x < 0) {
+    playerMovement("right");
+  }
+
+  playerMovement = false;
+}
