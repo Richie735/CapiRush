@@ -277,7 +277,6 @@ ttfLoader.load("assets/fonts/Bungee-Regular.ttf", (json) => {
 
 // ------------------------------------
 
-
 // Audio ------------------------------
 
 const audioLoader = new THREE.AudioLoader();
@@ -306,7 +305,6 @@ audioLoader.load("../assets/audio/punch.wav", function (buffer) {
 });
 
 // ------------------------------------
-
 
 // Add Player -------------------------
 
@@ -527,7 +525,7 @@ ball.position.z = 5;
 
 // Carro Vermelho
 var car = createCar(0);
-car.position.z += 6
+car.position.z += 6;
 const roda1 = createRoda();
 roda1.scale.set(0.9, 0.9, 0.9);
 roda1.position.x = -1.45;
@@ -880,7 +878,8 @@ function checkPlayerCollision(playerPosition) {
 
   for (const objectPosition of objectsToCheck) {
     if (
-      playerPosition.distanceTo(objectPosition) < collisionDistanceThreshold
+      playerPosition.manhattanDistanceTo(objectPosition) <
+      collisionDistanceThreshold
     ) {
       audio_punch.play();
       capi.position.y = 2;
@@ -900,10 +899,57 @@ function checkPlayerCollision(playerPosition) {
   }
 }
 
+// ------------------------------------
 
+// Day/Night Cycle --------------------
+var day = true;
+
+const ambientStep = 0.003;
+const directionalStep = 0.005;
+const pointStep = -0.1;
+
+function turnDay() {
+  for (var i = 0; i < 10; i++) {
+    setTimeout(function () {
+      ambientLight.intensity += ambientStep;
+      directionalLight.intensity += directionalStep;
+    }, 10000);
+  }
+  ambientLight.intensity = 0.075;
+  directionalLight.intensity = 0.1;
+  pointLight.intensity = 0;
+  console.log("day");
+  day = true;
+}
+
+function turnNight() {
+  for (var i = 0; i < 10; i++) {
+    setTimeout(function () {
+      ambientLight.intensity -= ambientStep;
+      directionalLight.intensity -= directionalStep;
+      pointLight.intensity -= pointStep;
+    }, 10000);
+  }
+  ambientLight.intensity = 0.045;
+  directionalLight.intensity = 0.05;
+  pointLight.intensity = 1;
+  console.log("night");
+  day = false;
+}
+
+function dayNightCycle() {
+  setInterval(function () {
+    if (day) {
+      turnNight();
+    } else {
+      turnDay();
+    }
+  }, 120000);
+}
 // ------------------------------------
 
 // Boot + Game Loop -------------------
+
 function animate() {
   requestAnimationFrame(animate); // First
 
@@ -927,6 +973,7 @@ function start() {
   camSetup();
   scenarioSetup();
   lightSetup();
+  dayNightCycle();
   animate();
 }
 
