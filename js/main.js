@@ -286,6 +286,20 @@ function togglePointLight() {
     pointLight.intensity = 0;
   }
 }
+function toggleRedSpotlight() {
+  if (spotLightRed.intensity == 0) {
+    spotLightRed.intensity = 1;
+  } else {
+    spotLightRed.intensity = 0;
+  }
+}
+function toggleGreenSpotlight() {
+  if (spotLightGreen.intensity == 0) {
+    spotLightGreen.intensity = 1;
+  } else {
+    spotLightGreen.intensity = 0;
+  }
+}
 
 window.addEventListener("keydown", (event) => {
   switch (event.code) {
@@ -298,67 +312,49 @@ window.addEventListener("keydown", (event) => {
     case "KeyP": // Point Light
       togglePointLight();
       break;
+    case "KeyK": // Red Spotlight
+      toggleRedSpotlight();
+      break;
+    case "KeyL": // Green Spotlight
+      toggleGreenSpotlight();
+      break;
   }
 });
 
 // ------------------------------------
 
 // Font Test---------------------------
+let textMesh;
 
-const fontLoader = new FontLoader();
-const ttfLoader = new TTFLoader();
-
-var gg = true;
-
-ttfLoader.load("assets/fonts/Bungee-Regular.ttf", (json) => {
-  // First parse the font.
-  const BungeeFont = fontLoader.parse(json);
-  // Use parsed font as normal.
-  const textGeometry = new TextGeometry("CapiRush", {
-    height: 0.3,
-    size: 10,
-    font: BungeeFont,
-  }), new THREE.MeshNormalMaterial());
-  textMesh.position.x = -35;
-  textMesh.position.y = 20;
-  textMesh.position.z = -50;
-
-  scene.add(textMesh);
-
+function createTextMesh( text) {
+  const fontLoader = new FontLoader();
+  const ttfLoader = new TTFLoader();
 
   ttfLoader.load("assets/fonts/Bungee-Regular.ttf", (json) => {
-    // First parse the font.
     const BungeeFont = fontLoader.parse(json);
-    // Use parsed font as normal.
 
-    const textMesh = new THREE.Mesh(new TextGeometry("Game Over", {
-      height: 0.2,
-      size: 0.5,
+    const textGeometry = new TextGeometry(text, {
+      height: 0.3,
+      size: 10,
       font: BungeeFont,
-    }), new THREE.MeshNormalMaterial());
-
-    // Criar objetos mesh para os elementos do menu
-    const buttonMesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 1), new THREE.MeshBasicMaterial({ color: 0xff0000 }));
-
-    // Posicionar os elementos do menu na cena
-    buttonMesh.position.y = 1;
-    textMesh.position.y = -1;
-
-    scene.add(buttonMesh);
-    scene.add(textMesh);
-
-    // Lidar com interações do jogador
-    buttonMesh.addEventListener('click', () => {
-      // Ação a ser executada quando o botão for clicado
-      console.log('Botão Clicado!');
     });
 
-    function title(){
-      
-    }
+    const textMaterial = new THREE.MeshNormalMaterial();
+    textMesh = new THREE.Mesh(textGeometry, textMaterial);
+    textMesh.position.x = -38;
+    textMesh.position.y = 20;
+    textMesh.position.z = -50;
 
+    scene.add(textMesh);
   });
-});
+}
+
+function removeTextMesh() {
+  if (textMesh && textMesh.parent) {
+    textMesh.parent.remove(textMesh);
+    textMesh = undefined;
+  }
+}
 
 // ------------------------------------
 
@@ -1101,6 +1097,7 @@ function animate() {
 function start() {
   score = 0;
   day = true;
+  createTextMesh("Capi Rush");
   updateScore();
   camSetup();
   scenarioSetup();
@@ -1430,9 +1427,25 @@ function createBush(scene) {
 
 // ----------------- GAMEOVER ----------------- //
 function gameOver() {
+  removeTextMesh();
+  createTextMesh("GameOver");
   toggleCam = false;
   objSpeed = 0;
-  const objetos = [car, carGreen, rodaGreen1, rodaGreen2, rodaGreen3, rodaGreen4, ball, roda, roda1, roda2, roda3, roda4, point]
+  const objetos = [
+    car,
+    carGreen,
+    rodaGreen1,
+    rodaGreen2,
+    rodaGreen3,
+    rodaGreen4,
+    ball,
+    roda,
+    roda1,
+    roda2,
+    roda3,
+    roda4,
+    point,
+  ];
 
   for (const objeto of objetos) {
     scene.remove(objeto);
