@@ -60,22 +60,23 @@ window.addEventListener("keydown", (event) => {
   switch (event.code) {
     case "KeyC":
       if (camPos == 1) {
-        // Camera 2 - Longe Cima
+        // Camera 2 - Orthographic - Longe Cima
         scene.remove(camera);
+        const zoom = 50;
         camera = new THREE.OrthographicCamera(
-          sizes.width / -2,
-          sizes.width / 2,
-          sizes.height / 2,
-          sizes.height / -2,
-          0,
+          sizes.width / -2 / zoom,
+          sizes.width / 2 / zoom,
+          sizes.height / 2 / zoom,
+          sizes.height / -2 / zoom,
+          -10,
           1000
         );
-        camera.position.set(500, -100, -200);
-        camera.lookAt(0, 10, 0);
+        camera.position.set(0, 1, 0);
+        camera.lookAt(0, 0, 0);
         scene.add(camera);
         camPos = 2;
       } else if (camPos == 2) {
-        // Camera 1 - Perto Tras
+        // Camera 1 - Perspective - Perto Tras
         scene.remove(camera);
         camera = new THREE.PerspectiveCamera(
           75,
@@ -186,7 +187,7 @@ function scenarioSetup() {
 
   // Walkway --------------------------
   const walkway = new Box({
-    width: 30,
+    width: 9,
     height: 0.5,
     depth: 50,
     position: { x: 0, y: -1.6, z: 0 },
@@ -196,7 +197,7 @@ function scenarioSetup() {
   });
   walkway.material.map.wrapS = THREE.RepeatWrapping;
   walkway.material.map.wrapT = THREE.RepeatWrapping;
-  walkway.material.map.repeat.set(25, 45);
+  walkway.material.map.repeat.set(6, 55);
 
   walkway.castShadow = true;
   walkway.receiveShadow = true;
@@ -292,14 +293,14 @@ ttfLoader.load("assets/fonts/Bungee-Regular.ttf", (json) => {
   // Use parsed font as normal.
   const textGeometry = new TextGeometry("CapiRush", {
     height: 0.3,
-    size: 1,
+    size: 10,
     font: BungeeFont,
   });
   const textMaterial = new THREE.MeshNormalMaterial();
   const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-  textMesh.position.x = -3.7;
-  textMesh.position.y = 1.3;
-  textMesh.position.z = 0;
+  textMesh.position.x = -35;
+  textMesh.position.y = 20;
+  textMesh.position.z = -50;
   scene.add(textMesh);
 });
 
@@ -370,7 +371,7 @@ var targetX = 0;
 var jumpHeight = 2.5;
 var jumpHeightSkate = 1.5;
 var heightRotate = 0.5;
-var jumpDuration = 700;
+var jumpDuration = 1000;
 var isJumping = false;
 var targetY = -1.1;
 var targetYSkate = -1.1;
@@ -920,7 +921,7 @@ function checkPlayerCollision(playerPosition) {
   if (playerPosition.distanceTo(point.position) < collisionDistanceThreshold) {
     audio_point.play();
     score += 1;
-    point.position.z = 5;
+    point.position.z = 10;
     if (score % 5 == 0) {
       objSpeed += 0.01;
     }
