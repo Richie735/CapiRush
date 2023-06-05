@@ -20,6 +20,48 @@ const render = new THREE.WebGLRenderer({
 });
 // ------------------------------------
 
+// Loading ----------------------------
+
+var progressBar = new THREE.Mesh(
+  new THREE.PlaneGeometry(100, 5),
+  new THREE.MeshBasicMaterial({ color: 0x11222c })
+);
+var progressBar2 = new THREE.Mesh(
+  new THREE.PlaneGeometry(100, 10),
+  new THREE.MeshBasicMaterial({ color: 0xf69000 })
+);
+
+progressBar2.position.set(0, 3, -60);
+progressBar.position.set(0, 3, -60);
+
+scene.add(progressBar2);
+scene.add(progressBar);
+
+function updateProgressBar(progress) {
+  var scaleX = progress;
+  progressBar.scale.set(scaleX, 1, 1);
+}
+
+function loadResources() {
+  var totalResources = 100;
+  var loadResources = 0;
+
+  var loadingInterval = setInterval(function () {
+    loadResources++;
+
+    var progress = loadResources / totalResources;
+    updateProgressBar(progress);
+
+    if (loadResources >= totalResources) {
+      clearInterval(loadingInterval);
+      scene.remove(progressBar2);
+      scene.remove(progressBar);
+    }
+  }, 50);
+}
+
+// ------------------------------------
+
 // Resize Handler ---------------------
 
 const sizes = {
@@ -1110,6 +1152,7 @@ function animate() {
 }
 
 function start() {
+  loadResources();
   score = 0;
   day = true;
   createTextMesh("Capi Rush");
