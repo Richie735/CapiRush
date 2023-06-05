@@ -737,9 +737,9 @@ scene.add(rodaGreen4);
 var roda = createRoda();
 roda.castShadow = true;
 roda.receiveShadow = true;
-scene.add(roda);
-roda.position.set(-3.6, -0.4, 5);
+roda.position.set(4, -0.2, 5);
 roda.scale.set(2, 2, 2);
+scene.add(roda);
 
 // ------------------------------------
 
@@ -838,10 +838,10 @@ function obstaclesLane(obj, position, count, oldRandom) {
         switch (obj) {
           case "redCar":
             car.position.x = -1.45;
-            roda1.position.x = -2.9;
-            roda2.position.x = -2.9;
-            roda3.position.x = -1.8;
-            roda4.position.x = -1.8;
+            roda1.position.x = -2;
+            roda2.position.x = -2;
+            roda3.position.x = -0.9;
+            roda4.position.x = -0.9;
             spotLightRed.position.x = -1.45;
             spotLightRed.target.position.x = -1.45;
 
@@ -849,10 +849,10 @@ function obstaclesLane(obj, position, count, oldRandom) {
             break;
           case "greenCar":
             carGreen.position.x = -1.45;
-            rodaGreen1.position.x = -2.9;
-            rodaGreen2.position.x = -2.9;
-            rodaGreen3.position.x = -1.8;
-            rodaGreen4.position.x = -1.8;
+            rodaGreen1.position.x = -2;
+            rodaGreen2.position.x = -2;
+            rodaGreen3.position.x = -0.9;
+            rodaGreen4.position.x = -0.9;
             spotLightGreen.position.x = -1.45;
             spotLightGreen.target.position.x = -1.45;
 
@@ -863,7 +863,7 @@ function obstaclesLane(obj, position, count, oldRandom) {
             ball.position.z = -17;
             break;
           case "roda":
-            roda.position.x = -3.6;
+            roda.position.x = -1.4;
             roda.position.z = -8;
             break;
         }
@@ -872,10 +872,10 @@ function obstaclesLane(obj, position, count, oldRandom) {
         switch (obj) {
           case "redCar":
             car.position.x = 0;
-            roda1.position.x = -1.45;
-            roda2.position.x = -1.45;
-            roda3.position.x = -0.35;
-            roda4.position.x = -0.35;
+            roda1.position.x = -0.55;
+            roda2.position.x = -0.55;
+            roda3.position.x = 0.55;
+            roda4.position.x = 0.55;
             spotLightRed.position.x = 0;
             spotLightRed.target.position.x = 0;
 
@@ -883,10 +883,10 @@ function obstaclesLane(obj, position, count, oldRandom) {
             break;
           case "greenCar":
             carGreen.position.x = 0;
-            rodaGreen1.position.x = -1.45;
-            rodaGreen2.position.x = -1.45;
-            rodaGreen3.position.x = -0.35;
-            rodaGreen4.position.x = -0.35;
+            rodaGreen1.position.x = -0.55;
+            rodaGreen2.position.x = -0.55;
+            rodaGreen3.position.x = 0.55;
+            rodaGreen4.position.x = 0.55;
             spotLightGreen.position.x = 0;
             spotLightGreen.target.position.x = 0;
 
@@ -898,7 +898,7 @@ function obstaclesLane(obj, position, count, oldRandom) {
             ball.position.z = -15;
             break;
           case "roda":
-            roda.position.x = -2;
+            roda.position.x = 0;
             roda.position.z = -15;
 
             break;
@@ -908,10 +908,10 @@ function obstaclesLane(obj, position, count, oldRandom) {
         switch (obj) {
           case "redCar":
             car.position.x = 1.45;
-            roda1.position.x = 0;
-            roda2.position.x = 0;
-            roda3.position.x = 1.1;
-            roda4.position.x = 1.1;
+            roda1.position.x = 0.9;
+            roda2.position.x = 0.9;
+            roda3.position.x = 2;
+            roda4.position.x = 2;
             spotLightRed.position.x = 1.45;
             spotLightRed.target.position.x = 1.45;
 
@@ -920,10 +920,10 @@ function obstaclesLane(obj, position, count, oldRandom) {
             break;
           case "greenCar":
             carGreen.position.x = 1.45;
-            rodaGreen1.position.x = 0;
-            rodaGreen2.position.x = 0;
-            rodaGreen3.position.x = 1.1;
-            rodaGreen4.position.x = 1.1;
+            rodaGreen1.position.x = 0.9;
+            rodaGreen2.position.x = 0.9;
+            rodaGreen3.position.x = 2;
+            rodaGreen4.position.x = 2;
             spotLightGreen.position.x = 1.45;
             spotLightGreen.target.position.x = 1.45;
 
@@ -934,7 +934,7 @@ function obstaclesLane(obj, position, count, oldRandom) {
             ball.position.z = -15;
             break;
           case "roda":
-            roda.position.x = -0.5;
+            roda.position.x = 1.3;
             roda.position.z = -15;
             break;
         }
@@ -1055,10 +1055,10 @@ function checkPlayerCollision(playerPosition) {
   const objectsToCheck = [
     car.position,
     carGreen.position,
-    roda.position,
     ball.position,
+    roda.position,
   ];
-  const collisionDistanceThreshold = 0.5;
+  const collisionDistanceThreshold = 1.4;
 
   for (const objectPosition of objectsToCheck) {
     if (
@@ -1265,15 +1265,16 @@ function createRoda() {
     new THREE.MeshPhongMaterial({ color: 0x1b1e23 })
   );
 
-  tire.position.set(0, -1.02, 0);
+  tire.position.set(0, 0, 0);
   tire.scale.set(0.4, 0.4, 0.4);
-  tire2.position.set(0, -1.02, 0);
+  tire2.position.set(0, 0, 0);
   tire2.scale.set(0.5, 0.5, 0.5);
 
   roda.add(tire);
   roda.add(tire2);
 
   roda.rotateZ(Math.PI / 2);
+  
   roda.position.y = -0.8;
 
   roda.castShadow = true;
