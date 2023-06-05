@@ -107,14 +107,7 @@ render.render(scene, camera);
 
 // Scenario ---------------------------
 class Box extends THREE.Mesh {
-  constructor({
-    width,
-    height,
-    depth,
-    texture = "",
-    velocity = { x: 0, y: 0, z: 0 },
-    position = { x: 0, y: 0, z: 0 },
-  }) {
+  constructor({ width, height, depth, position = { x: 0, y: 0, z: 0 } }) {
     super(new THREE.BoxGeometry(width, height, depth));
 
     this.width = width;
@@ -214,6 +207,7 @@ function scenarioSetup() {
 
 render.shadowMap.enabled = true;
 render.shadowMap.type = THREE.PCFSoftShadowMap;
+render.shadowMap.autoUpdate = true;
 
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.075);
 gui
@@ -241,10 +235,34 @@ gui.add(pointLight, "intensity").name("Point Light").max(1).min(0).step(0.1);
 //const pointLightHelper = new THREE.PointLightHelper(pointLight, 1);
 //scene.add(pointLightHelper);
 
+const spotLightRed = new THREE.SpotLight(0xfada5e);
+spotLightRed.castShadow = true;
+spotLightRed.angle = 0.3;
+spotLightRed.position.set(0, -0.5, 9);
+spotLightRed.target.position.set(0, 0, 100);
+gui.add(spotLightRed, "intensity").name("Spot Light");
+
+const spotLightGreen = new THREE.SpotLight(0xfada5e);
+spotLightGreen.castShadow = true;
+spotLightGreen.angle = 0.3;
+spotLightGreen.position.set(0, -0.5, 9);
+spotLightGreen.target.position.set(0, 0, 100);
+gui.add(spotLightGreen, "intensity").name("Spot Light");
+
+const spotLightHelperRed = new THREE.SpotLightHelper(spotLightRed);
+spotLightHelperRed.visible = false;
+scene.add(spotLightHelperRed);
+
+const spotLightHelperGreen = new THREE.SpotLightHelper(spotLightGreen);
+spotLightHelperGreen.visible = false;
+scene.add(spotLightHelperGreen);
+
 function lightSetup() {
   scene.add(ambientLight);
   scene.add(directionalLight);
   scene.add(pointLight);
+  scene.add(spotLightRed);
+  scene.add(spotLightGreen);
 }
 
 function toggleAmbientLight() {
@@ -295,8 +313,8 @@ var gg = true;
 ttfLoader.load("assets/fonts/Bungee-Regular.ttf", (json) => {
   // First parse the font.
   const BungeeFont = fontLoader.parse(json);
-
-  const textMesh = new THREE.Mesh(new TextGeometry("CapiRush", {
+  // Use parsed font as normal.
+  const textGeometry = new TextGeometry("CapiRush", {
     height: 0.3,
     size: 10,
     font: BungeeFont,
@@ -610,6 +628,18 @@ const roda4 = createRoda();
 roda4.scale.set(0.9, 0.9, 0.9);
 roda4.position.x = -0.35;
 roda4.position.z = 5.4;
+
+car.castShadow = true;
+car.receiveShadow = true;
+roda1.castShadow = true;
+roda1.receiveShadow = true;
+roda2.castShadow = true;
+roda2.receiveShadow = true;
+roda3.castShadow = true;
+roda3.receiveShadow = true;
+roda4.castShadow = true;
+roda4.receiveShadow = true;
+
 scene.add(car);
 scene.add(roda1);
 scene.add(roda2);
@@ -635,6 +665,18 @@ const rodaGreen4 = createRoda();
 rodaGreen4.scale.set(0.9, 0.9, 0.9);
 rodaGreen4.position.x = -0.35;
 rodaGreen4.position.z = 6.4;
+
+carGreen.castShadow = true;
+carGreen.receiveShadow = true;
+rodaGreen1.castShadow = true;
+rodaGreen1.receiveShadow = true;
+rodaGreen2.castShadow = true;
+rodaGreen2.receiveShadow = true;
+rodaGreen3.castShadow = true;
+rodaGreen3.receiveShadow = true;
+rodaGreen4.castShadow = true;
+rodaGreen4.receiveShadow = true;
+
 scene.add(carGreen);
 scene.add(rodaGreen1);
 scene.add(rodaGreen2);
@@ -643,6 +685,8 @@ scene.add(rodaGreen4);
 
 // Roda
 var roda = createRoda();
+roda.castShadow = true;
+roda.receiveShadow = true;
 scene.add(roda);
 roda.position.set(-3.6, -0.4, 5);
 roda.scale.set(2, 2, 2);
@@ -692,12 +736,14 @@ function movingObstacles() {
   roda2.position.z += objSpeed;
   roda3.position.z += objSpeed;
   roda4.position.z += objSpeed;
+  spotLightRed.position.z += objSpeed;
 
   carGreen.position.z += objSpeed;
   rodaGreen1.position.z += objSpeed;
   rodaGreen2.position.z += objSpeed;
   rodaGreen3.position.z += objSpeed;
   rodaGreen4.position.z += objSpeed;
+  spotLightGreen.position.z += objSpeed;
 
   roda1.rotation.x += objSpeed;
   roda2.rotation.x += objSpeed;
@@ -718,6 +764,7 @@ function carFrentex(flag) {
       roda2.position.z = -25.7;
       roda3.position.z = -24.5;
       roda4.position.z = -25.7;
+      spotLightRed.position.z = -27;
       break;
     case "green":
       carGreen.position.z = -15;
@@ -725,6 +772,7 @@ function carFrentex(flag) {
       rodaGreen2.position.z = -15.7;
       rodaGreen3.position.z = -14.5;
       rodaGreen4.position.z = -15.7;
+      spotLightGreen.position.z = -17;
       break;
   }
 }
@@ -744,6 +792,9 @@ function obstaclesLane(obj, position, count, oldRandom) {
             roda2.position.x = -2.9;
             roda3.position.x = -1.8;
             roda4.position.x = -1.8;
+            spotLightRed.position.x = -1.45;
+            spotLightRed.target.position.x = -1.45;
+
             carFrentex("red");
             break;
           case "greenCar":
@@ -752,6 +803,9 @@ function obstaclesLane(obj, position, count, oldRandom) {
             rodaGreen2.position.x = -2.9;
             rodaGreen3.position.x = -1.8;
             rodaGreen4.position.x = -1.8;
+            spotLightGreen.position.x = -1.45;
+            spotLightGreen.target.position.x = -1.45;
+
             carFrentex("green");
             break;
           case "ball":
@@ -772,6 +826,9 @@ function obstaclesLane(obj, position, count, oldRandom) {
             roda2.position.x = -1.45;
             roda3.position.x = -0.35;
             roda4.position.x = -0.35;
+            spotLightRed.position.x = 0;
+            spotLightRed.target.position.x = 0;
+
             carFrentex("red");
             break;
           case "greenCar":
@@ -780,6 +837,9 @@ function obstaclesLane(obj, position, count, oldRandom) {
             rodaGreen2.position.x = -1.45;
             rodaGreen3.position.x = -0.35;
             rodaGreen4.position.x = -0.35;
+            spotLightGreen.position.x = 0;
+            spotLightGreen.target.position.x = 0;
+
             carFrentex("green");
 
             break;
@@ -802,6 +862,9 @@ function obstaclesLane(obj, position, count, oldRandom) {
             roda2.position.x = 0;
             roda3.position.x = 1.1;
             roda4.position.x = 1.1;
+            spotLightRed.position.x = 1.45;
+            spotLightRed.target.position.x = 1.45;
+
             carFrentex("red");
 
             break;
@@ -811,6 +874,9 @@ function obstaclesLane(obj, position, count, oldRandom) {
             rodaGreen2.position.x = 0;
             rodaGreen3.position.x = 1.1;
             rodaGreen4.position.x = 1.1;
+            spotLightGreen.position.x = 1.45;
+            spotLightGreen.target.position.x = 1.45;
+
             carFrentex("green");
             break;
           case "ball":
@@ -985,7 +1051,6 @@ function turnDay() {
   ambientLight.intensity = 0.075;
   directionalLight.intensity = 0.1;
   pointLight.intensity = 0;
-  console.log("day");
   day = true;
 }
 
@@ -1000,7 +1065,6 @@ function turnNight() {
   ambientLight.intensity = 0.045;
   directionalLight.intensity = 0.05;
   pointLight.intensity = 1;
-  console.log("night");
   day = false;
 }
 
