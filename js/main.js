@@ -239,7 +239,6 @@ spotLightRed.position.set(0, -0.5, 9);
 spotLightRed.target.position.set(0, 0, 100);
 gui.add(spotLightRed, "intensity").name("Spot Light");
 
-
 const spotLightGreen = new THREE.SpotLight(0xfada5e);
 spotLightGreen.castShadow = true;
 spotLightGreen.angle = 0.3;
@@ -254,7 +253,6 @@ scene.add(spotLightHelperRed);
 const spotLightHelperGreen = new THREE.SpotLightHelper(spotLightGreen);
 spotLightHelperGreen.visible = false;
 scene.add(spotLightHelperGreen);
-
 
 function lightSetup() {
   scene.add(ambientLight);
@@ -592,6 +590,18 @@ const roda4 = createRoda();
 roda4.scale.set(0.9, 0.9, 0.9);
 roda4.position.x = -0.35;
 roda4.position.z = 5.4;
+
+car.castShadow = true;
+car.receiveShadow = true;
+roda1.castShadow = true;
+roda1.receiveShadow = true;
+roda2.castShadow = true;
+roda2.receiveShadow = true;
+roda3.castShadow = true;
+roda3.receiveShadow = true;
+roda4.castShadow = true;
+roda4.receiveShadow = true;
+
 scene.add(car);
 scene.add(roda1);
 scene.add(roda2);
@@ -617,6 +627,18 @@ const rodaGreen4 = createRoda();
 rodaGreen4.scale.set(0.9, 0.9, 0.9);
 rodaGreen4.position.x = -0.35;
 rodaGreen4.position.z = 6.4;
+
+carGreen.castShadow = true;
+carGreen.receiveShadow = true;
+rodaGreen1.castShadow = true;
+rodaGreen1.receiveShadow = true;
+rodaGreen2.castShadow = true;
+rodaGreen2.receiveShadow = true;
+rodaGreen3.castShadow = true;
+rodaGreen3.receiveShadow = true;
+rodaGreen4.castShadow = true;
+rodaGreen4.receiveShadow = true;
+
 scene.add(carGreen);
 scene.add(rodaGreen1);
 scene.add(rodaGreen2);
@@ -625,6 +647,8 @@ scene.add(rodaGreen4);
 
 // Roda
 var roda = createRoda();
+roda.castShadow = true;
+roda.receiveShadow = true;
 scene.add(roda);
 roda.position.set(-3.6, -0.4, 5);
 roda.scale.set(2, 2, 2);
@@ -776,7 +800,7 @@ function obstaclesLane(obj, position, count, oldRandom) {
             rodaGreen3.position.x = -0.35;
             rodaGreen4.position.x = -0.35;
             spotLightGreen.position.x = 0;
-            spotLightGreen.target.position.x =  0;
+            spotLightGreen.target.position.x = 0;
 
             carFrentex("green");
 
@@ -990,7 +1014,6 @@ function turnDay() {
   ambientLight.intensity = 0.075;
   directionalLight.intensity = 0.1;
   pointLight.intensity = 0;
-  console.log("day");
   day = true;
 }
 
@@ -1005,7 +1028,6 @@ function turnNight() {
   ambientLight.intensity = 0.045;
   directionalLight.intensity = 0.05;
   pointLight.intensity = 1;
-  console.log("night");
   day = false;
 }
 

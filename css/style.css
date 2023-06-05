@@ -14,7 +14,7 @@ canvas {
 
 #atualScore{
   position: absolute;
-  top: 10;
+  top: 5;
   left: 80;
   padding: 10px;
   font-size: 40px;
