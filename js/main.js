@@ -252,27 +252,14 @@ render.shadowMap.type = THREE.PCFSoftShadowMap;
 render.shadowMap.autoUpdate = true;
 
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.075);
-gui
-  .add(ambientLight, "intensity")
-  .name("Ambient Light")
-  .max(0.075)
-  .min(0)
-  .step(0.075);
 
 const directionalLight = new THREE.DirectionalLight(0xfae9b8, 0.1);
 directionalLight.castShadow = true;
 directionalLight.position.set(0, 5, 0);
-gui
-  .add(directionalLight, "intensity")
-  .name("Directional Light")
-  .max(0.3)
-  .min(0)
-  .step(0.1);
 
 const pointLight = new THREE.PointLight(0xe79f8c, 1, 5, 1);
 pointLight.castShadow = true;
 pointLight.position.set(-3.1, 1, -2.1);
-gui.add(pointLight, "intensity").name("Point Light").max(1).min(0).step(0.1);
 
 //const pointLightHelper = new THREE.PointLightHelper(pointLight, 1);
 //scene.add(pointLightHelper);
@@ -283,12 +270,6 @@ spotLightRed.castShadow = true;
 spotLightRed.angle = 0.3;
 spotLightRed.position.set(0, -0.5, 9);
 spotLightRed.target.position.set(0, 0, 100);
-gui
-  .add(spotLightRed, "intensity")
-  .name("Red Car SpotLight")
-  .max(1)
-  .min(0)
-  .step(1);
 
 const spotLightGreen = new THREE.SpotLight(0xfada5e);
 spotLightGreen.intensity = 1;
@@ -296,12 +277,6 @@ spotLightGreen.castShadow = true;
 spotLightGreen.angle = 0.3;
 spotLightGreen.position.set(0, -0.5, 9);
 spotLightGreen.target.position.set(0, 0, 100);
-gui
-  .add(spotLightGreen, "intensity")
-  .name("Green Car SpotLight")
-  .max(1)
-  .min(0)
-  .step(1);
 
 const spotLightHelperRed = new THREE.SpotLightHelper(spotLightRed);
 spotLightHelperRed.visible = false;
@@ -733,7 +708,6 @@ scene.add(rodaGreen2);
 scene.add(rodaGreen3);
 scene.add(rodaGreen4);
 
-// Roda
 var roda = createRoda();
 roda.castShadow = true;
 roda.receiveShadow = true;
@@ -1071,6 +1045,12 @@ function movingOutObj() {
 // ------------------------------------
 
 // Check Collisions --------------------
+var collision = true; 
+
+function toggleCollision() {
+  collision = !collision;
+  console.log("collision: " + collision);
+}
 
 function checkPlayerCollision(playerPosition) {
   const objectsToCheck = [
@@ -1139,6 +1119,10 @@ function turnDay() {
       directionalLight.intensity += directionalStep;
     }, 10000);
   }
+  toggleDay();
+}
+
+function toggleDay() {
   ambientLight.intensity = 0.075;
   directionalLight.intensity = 0.1;
   pointLight.intensity = 0;
@@ -1155,6 +1139,10 @@ function turnNight() {
       pointLight.intensity -= pointStep;
     }, 10000);
   }
+  toggleNight();
+}
+
+function toggleNight() {
   ambientLight.intensity = 0.045;
   directionalLight.intensity = 0.05;
   pointLight.intensity = 1;
@@ -1185,8 +1173,7 @@ function animate() {
     movingObstacles();
     movingPoint();
     movingOutObj();
-
-    checkPlayerCollision(capi.position);
+    if(collision) checkPlayerCollision(capi.position);
   }
   // ------------------------------------
 
@@ -1196,18 +1183,20 @@ function animate() {
 function start() {
   loadResources();
   score = 0;
-  day = true;
+  collision = true;
   createTextMesh("Capi Rush");
   updateScore();
   camSetup();
   scenarioSetup();
   lightSetup();
+  toggleDay();
   dayNightCycle();
   animate();
 }
 
 start();
 // ------------------------------------
+
 
 // Create Functions -------------------
 
@@ -1524,9 +1513,12 @@ function createBush(scene) {
 
   return tree3;
 }
+
 // ------------------------------------
 
-// ----------------- GAMEOVER ----------------- //
+
+// GAMEOVER ---------------------------
+
 function gameOver() {
   removeTextMesh();
   createTextMesh("GameOver");
@@ -1563,3 +1555,84 @@ function gameOver() {
   playerMovement = false;
   toggleCam = false;
 }
+
+// ------------------------------------
+
+
+// GUI --------------------------------
+
+const lightFolder = gui.addFolder("Luzes");
+var ambLightBt = {
+  add: function () {
+    toggleAmbientLight();
+  },
+};
+lightFolder.add(ambLightBt, "add").name("Key I -> Ambient Light");
+const dirLight = {
+  add: function () {
+    toggleDirectionalLight();
+  },
+};
+lightFolder.add(dirLight, "add").name("Key O -> Directional Light");
+var pointLightBt = {
+  add: function () {
+    togglePointLight();
+  },
+};
+lightFolder.add(pointLightBt, "add").name("Key P -> Point Light");
+var spotLightRedBt = {
+  add: function () {
+    toggleRedSpotlight();
+  },
+};
+lightFolder.add(spotLightRedBt, "add").name("Key K -> Red Car Light");
+var spotLightGreenBt = {
+  add: function () {
+    toggleGreenSpotlight();
+  },
+};
+lightFolder.add(spotLightGreenBt, "add").name("Key L -> Green Car Light");
+
+const cameraFolder = gui.addFolder("Câmera");
+var cameraBt = {
+  add: function () {
+    toggleCam();
+  },
+};
+cameraFolder.add(cameraBt, "add").name("Key C -> Toggle Camera");
+
+const dayFolder = gui.addFolder("Dia/Noite");
+var amanhecerBt = {
+  add: function () {
+    turnDay();
+  },
+};
+dayFolder.add(amanhecerBt, "add").name("Amanhecer");
+var dayLight = {
+  add: function () {
+    toggleDayLight();
+  },
+};
+dayFolder.add(dayLight, "add").name("Dia");
+var anoitecerBt = {
+  add: function () {
+    turnNight();
+  },
+};
+dayFolder.add(anoitecerBt, "add").name("Anoitecer");
+var nightLight = {
+  add: function () {
+    toggleNight();
+  },
+};
+dayFolder.add(nightLight, "add").name("Noite");
+
+
+const gameFolder = gui.addFolder("Jogo");
+var collBt = {
+  add: function () {
+    toggleCollision();
+  }
+};
+gameFolder.add(collBt, "add").name("Collision");
+// ------------------------------------
