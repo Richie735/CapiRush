@@ -171,20 +171,46 @@ function scenarioSetup() {
     depth: 50,
     position: { x: 0, y: -1.5, z: 0 },
   });
-  const roadTexture = new THREE.TextureLoader().load(
-    "./assets/textures/road.jpg"
-  );
-  const roadMaterial = new THREE.MeshPhongMaterial({ map: roadTexture });
-  road.material = roadMaterial;
+  road.material = new THREE.MeshPhongMaterial({
+    map: new THREE.TextureLoader().load("./assets/textures/road.jpg"),
+  });
   road.material.map.wrapS = THREE.RepeatWrapping;
   road.material.map.wrapT = THREE.RepeatWrapping;
   road.material.map.repeat.set(3, 40);
+
+  road.castShadow = true;
+  road.receiveShadow = true;
+
   scene.add(road);
+  // ----------------------------------
+
+  // Walkway --------------------------
+  const walkway = new Box({
+    width: 30,
+    height: 0.5,
+    depth: 50,
+    position: { x: 0, y: -1.6, z: 0 },
+  });
+  walkway.material = new THREE.MeshPhongMaterial({
+    map: new THREE.TextureLoader().load("./assets/textures/walkway.png"),
+  });
+  walkway.material.map.wrapS = THREE.RepeatWrapping;
+  walkway.material.map.wrapT = THREE.RepeatWrapping;
+  walkway.material.map.repeat.set(25, 45);
+
+  walkway.castShadow = true;
+  walkway.receiveShadow = true;
+
+  scene.add(walkway);
   // ----------------------------------
 }
 // ------------------------------------
 
 // Light ------------------------------
+
+render.shadowMap.enabled = true;
+render.shadowMap.type = THREE.PCFSoftShadowMap;
+
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.075);
 gui
   .add(ambientLight, "intensity")
@@ -194,6 +220,7 @@ gui
   .step(0.075);
 
 const directionalLight = new THREE.DirectionalLight(0xfae9b8, 0.1);
+directionalLight.castShadow = true;
 directionalLight.position.set(0, 5, 0);
 gui
   .add(directionalLight, "intensity")
@@ -203,6 +230,7 @@ gui
   .step(0.1);
 
 const pointLight = new THREE.PointLight(0xe79f8c, 1, 5, 1);
+pointLight.castShadow = true;
 pointLight.position.set(-3.1, 1, -2.1);
 gui.add(pointLight, "intensity").name("Point Light").max(1).min(0).step(0.1);
 
@@ -321,6 +349,7 @@ loader.load("./assets/models/capi/Capybara.fbx", function (object) {
   object.velocity = { x: 0, y: 0, z: 0 };
   object.gravity = gravForce;
   object.castShadow = true;
+  object.receiveShadow = true;
 
   capi = object;
   scene.add(capi);
@@ -768,7 +797,7 @@ let loadedModel;
 const glftLoader = new GLTFLoader();
 glftLoader.load("./assets/models/poste/scene.gltf", (gltfScene) => {
   loadedModel = gltfScene;
-  gltfScene.scene.position.set(-2.8, -1.3, -2);
+  gltfScene.scene.position.set(-2.8, -1.35, -2);
   gltfScene.scene.scale.set(1, 1.2, 1);
   scene.add(gltfScene.scene);
 });
@@ -969,6 +998,7 @@ function animate() {
 
 function start() {
   score = 0;
+  day = true;
   updateScore();
   camSetup();
   scenarioSetup();
@@ -1025,6 +1055,9 @@ function createSkate() {
   skate.scale.set(0.8, 0.8, 0.8);
   skate.gravity = gravForce;
 
+  skate.castShadow = true;
+  skate.receiveShadow = true;
+
   return skate;
 }
 
@@ -1037,6 +1070,9 @@ function create_points() {
   );
 
   point.position.set(0, -0.8, 0);
+
+  point.castShadow = true;
+  point.receiveShadow = true;
 
   return point;
 }
@@ -1051,6 +1087,9 @@ function createBall() {
 
   ball.rotateY(-Math.PI / 2);
   ball.position.set(0, -0.75, 0);
+
+  ball.castShadow = true;
+  ball.receiveShadow = true;
 
   return ball;
 }
@@ -1079,6 +1118,9 @@ function createRoda() {
 
   roda.rotateZ(Math.PI / 2);
   roda.position.y = -0.8;
+
+  roda.castShadow = true;
+  roda.receiveShadow = true;
 
   return roda;
 }
@@ -1191,7 +1233,10 @@ function createSquareTree() {
 
   tree.rotation.y = 1;
   tree.position.z = 0;
-  tree.position.y = -0.2;
+  tree.position.y = -0.25;
+
+  tree.castShadow = true;
+  tree.receiveShadow = true;
 
   return tree;
 }
@@ -1227,7 +1272,10 @@ function createTree2() {
   tree2.add(leafMesh3);
 
   tree2.position.x = 0;
-  tree2.position.y = 0.5;
+  tree2.position.y = 0.6;
+
+  tree2.castShadow = true;
+  tree2.receiveShadow = true;
 
   return tree2;
 }
@@ -1270,6 +1318,9 @@ function createBush(scene) {
   tree3.add(leafMesh4);
 
   tree3.position.x = 0;
+
+  tree3.castShadow = true;
+  tree3.receiveShadow = true;
 
   return tree3;
 }
