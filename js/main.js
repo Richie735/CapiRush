@@ -236,18 +236,30 @@ gui.add(pointLight, "intensity").name("Point Light").max(1).min(0).step(0.1);
 //scene.add(pointLightHelper);
 
 const spotLightRed = new THREE.SpotLight(0xfada5e);
+spotLightRed.intensity = 1;
 spotLightRed.castShadow = true;
 spotLightRed.angle = 0.3;
 spotLightRed.position.set(0, -0.5, 9);
 spotLightRed.target.position.set(0, 0, 100);
-gui.add(spotLightRed, "intensity").name("Spot Light");
+gui
+  .add(spotLightRed, "intensity")
+  .name("Red Car SpotLight")
+  .max(1)
+  .min(0)
+  .step(1);
 
 const spotLightGreen = new THREE.SpotLight(0xfada5e);
+spotLightGreen.intensity = 1;
 spotLightGreen.castShadow = true;
 spotLightGreen.angle = 0.3;
 spotLightGreen.position.set(0, -0.5, 9);
 spotLightGreen.target.position.set(0, 0, 100);
-gui.add(spotLightGreen, "intensity").name("Spot Light");
+gui
+  .add(spotLightGreen, "intensity")
+  .name("Green Car SpotLight")
+  .max(1)
+  .min(0)
+  .step(1);
 
 const spotLightHelperRed = new THREE.SpotLightHelper(spotLightRed);
 spotLightHelperRed.visible = false;
@@ -326,7 +338,7 @@ window.addEventListener("keydown", (event) => {
 // Font Test---------------------------
 let textMesh;
 
-function createTextMesh( text) {
+function createTextMesh(text) {
   const fontLoader = new FontLoader();
   const ttfLoader = new TTFLoader();
 
@@ -1035,7 +1047,6 @@ var day = true;
 
 const ambientStep = 0.003;
 const directionalStep = 0.005;
-const pointStep = -0.1;
 
 function turnDay() {
   for (var i = 0; i < 10; i++) {
@@ -1047,6 +1058,8 @@ function turnDay() {
   ambientLight.intensity = 0.075;
   directionalLight.intensity = 0.1;
   pointLight.intensity = 0;
+  spotLightRed.intensity = 0;
+  spotLightGreen.intensity = 0;
   day = true;
 }
 
@@ -1061,6 +1074,8 @@ function turnNight() {
   ambientLight.intensity = 0.045;
   directionalLight.intensity = 0.05;
   pointLight.intensity = 1;
+  spotLightRed.intensity = 1;
+  spotLightGreen.intensity = 1;
   day = false;
 }
 
@@ -1432,19 +1447,21 @@ function gameOver() {
   toggleCam = false;
   objSpeed = 0;
   const objetos = [
+    ball,
+    roda,
     car,
+    roda1,
+    roda2,
+    roda3,
+    roda4,
+    spotLightRed,
+    point,
     carGreen,
     rodaGreen1,
     rodaGreen2,
     rodaGreen3,
     rodaGreen4,
-    ball,
-    roda,
-    roda1,
-    roda2,
-    roda3,
-    roda4,
-    point,
+    spotLightGreen,
   ];
 
   for (const objeto of objetos) {
