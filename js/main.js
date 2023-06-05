@@ -837,105 +837,126 @@ function obstaclesLane(obj, position, count, oldRandom) {
       case 0: // left
         switch (obj) {
           case "redCar":
-            car.position.x = -1.45;
-            roda1.position.x = -2;
-            roda2.position.x = -2;
-            roda3.position.x = -0.9;
-            roda4.position.x = -0.9;
-            spotLightRed.position.x = -1.45;
-            spotLightRed.target.position.x = -1.45;
+            if (checkObstaclesCollision(car, -1.45, 0, -25)) {
+              car.position.x = -1.45;
+              roda1.position.x = -2;
+              roda2.position.x = -2;
+              roda3.position.x = -0.9;
+              roda4.position.x = -0.9;
+              spotLightRed.position.x = -1.45;
+              spotLightRed.target.position.x = -1.45;
 
-            carFrentex("red");
+              carFrentex("red");
+            }
             break;
           case "greenCar":
-            carGreen.position.x = -1.45;
-            rodaGreen1.position.x = -2;
-            rodaGreen2.position.x = -2;
-            rodaGreen3.position.x = -0.9;
-            rodaGreen4.position.x = -0.9;
-            spotLightGreen.position.x = -1.45;
-            spotLightGreen.target.position.x = -1.45;
+            if (checkObstaclesCollision(carGreen, -1.45, 0, -15)) {
+              carGreen.position.x = -1.45;
+              rodaGreen1.position.x = -2;
+              rodaGreen2.position.x = -2;
+              rodaGreen3.position.x = -0.9;
+              rodaGreen4.position.x = -0.9;
+              spotLightGreen.position.x = -1.45;
+              spotLightGreen.target.position.x = -1.45;
 
-            carFrentex("green");
+              carFrentex("green");
+            }
             break;
           case "ball":
-            ball.position.x = -1.63;
-            ball.position.z = -17;
+            if (checkObstaclesCollision(ball, -1.63, 0, -15)) {
+              ball.position.x = -1.63;
+              ball.position.z = -17;
+            }
             break;
           case "roda":
-            roda.position.x = -1.4;
-            roda.position.z = -8;
+            if (checkObstaclesCollision(roda, -1.4, -2, -15)) {
+              roda.position.x = -1.4;
+              roda.position.z = -8;
+            }
             break;
         }
         break;
       case 1: // center
         switch (obj) {
           case "redCar":
-            car.position.x = 0;
-            roda1.position.x = -0.55;
-            roda2.position.x = -0.55;
-            roda3.position.x = 0.55;
-            roda4.position.x = 0.55;
-            spotLightRed.position.x = 0;
-            spotLightRed.target.position.x = 0;
+            if (checkObstaclesCollision(car, 0, 0, -25)) {
+              car.position.x = 0;
+              roda1.position.x = -0.55;
+              roda2.position.x = -0.55;
+              roda3.position.x = 0.55;
+              roda4.position.x = 0.55;
+              spotLightRed.position.x = 0;
+              spotLightRed.target.position.x = 0;
 
-            carFrentex("red");
+              carFrentex("red");
+            }
             break;
           case "greenCar":
-            carGreen.position.x = 0;
-            rodaGreen1.position.x = -0.55;
-            rodaGreen2.position.x = -0.55;
-            rodaGreen3.position.x = 0.55;
-            rodaGreen4.position.x = 0.55;
-            spotLightGreen.position.x = 0;
-            spotLightGreen.target.position.x = 0;
+            if (checkObstaclesCollision(carGreen, 0, 0, -15)) {
+              carGreen.position.x = 0;
+              rodaGreen1.position.x = -0.55;
+              rodaGreen2.position.x = -0.55;
+              rodaGreen3.position.x = 0.55;
+              rodaGreen4.position.x = 0.55;
+              spotLightGreen.position.x = 0;
+              spotLightGreen.target.position.x = 0;
 
-            carFrentex("green");
-
+              carFrentex("green");
+            }
             break;
           case "ball":
-            ball.position.x = 0;
-            ball.position.z = -15;
+            if (checkObstaclesCollision(ball, 0, 0, -15)) {
+              ball.position.x = 0;
+              ball.position.z = -15;
+            }
             break;
           case "roda":
-            roda.position.x = 0;
-            roda.position.z = -15;
-
+            if (checkObstaclesCollision(roda, 0, -2, -15)) {
+              roda.position.x = 0;
+              roda.position.z = -15;
+            }
             break;
         }
         break;
       case 2: // right
         switch (obj) {
           case "redCar":
-            car.position.x = 1.45;
-            roda1.position.x = 0.9;
-            roda2.position.x = 0.9;
-            roda3.position.x = 2;
-            roda4.position.x = 2;
-            spotLightRed.position.x = 1.45;
-            spotLightRed.target.position.x = 1.45;
+            if (checkObstaclesCollision(car, 1.45, 0, -25)) {
+              car.position.x = 1.45;
+              roda1.position.x = 0.9;
+              roda2.position.x = 0.9;
+              roda3.position.x = 2;
+              roda4.position.x = 2;
+              spotLightRed.position.x = 1.45;
+              spotLightRed.target.position.x = 1.45;
 
-            carFrentex("red");
-
+              carFrentex("red");
+            }
             break;
           case "greenCar":
-            carGreen.position.x = 1.45;
-            rodaGreen1.position.x = 0.9;
-            rodaGreen2.position.x = 0.9;
-            rodaGreen3.position.x = 2;
-            rodaGreen4.position.x = 2;
-            spotLightGreen.position.x = 1.45;
-            spotLightGreen.target.position.x = 1.45;
+            if (checkObstaclesCollision(carGreen, 1.45, 0, -15)) {
+              carGreen.position.x = 1.45;
+              rodaGreen1.position.x = 0.9;
+              rodaGreen2.position.x = 0.9;
+              rodaGreen3.position.x = 2;
+              rodaGreen4.position.x = 2;
+              spotLightGreen.position.x = 1.45;
+              spotLightGreen.target.position.x = 1.45;
 
-            carFrentex("green");
+              carFrentex("green");
+            }
             break;
           case "ball":
-            ball.position.x = 1.63;
-            ball.position.z = -15;
+            if (checkObstaclesCollision(ball, 1.63, 0, -15)) {
+              ball.position.x = 1.63;
+              ball.position.z = -15;
+            }
             break;
           case "roda":
-            roda.position.x = 1.3;
-            roda.position.z = -15;
+            if (checkObstaclesCollision(roda, 1.3, -2, -15)) {
+              roda.position.x = 1.3;
+              roda.position.z = -15;
+            }
             break;
         }
         break;
@@ -1080,6 +1101,27 @@ function checkPlayerCollision(playerPosition) {
     }
     updateScore();
   }
+}
+
+function checkObstaclesCollision(objectToCheck, x, y, z) {
+  const objectsToCheck = [
+    car.position,
+    carGreen.position,
+    ball.position,
+    roda.position,
+  ];
+  const collisionDistanceThreshold = 1.4;
+  const point = new THREE.Vector3(x, y, z);
+
+  for (const objectPosition of objectsToCheck) {
+    if (objectPosition.distanceTo(point) != objectToCheck.position) {
+      if (objectPosition.distanceTo(point) < collisionDistanceThreshold) {
+        return false;
+      }
+    }
+  }
+
+  return true;
 }
 
 // ------------------------------------
@@ -1274,7 +1316,7 @@ function createRoda() {
   roda.add(tire2);
 
   roda.rotateZ(Math.PI / 2);
-  
+
   roda.position.y = -0.8;
 
   roda.castShadow = true;
@@ -1488,7 +1530,7 @@ function createBush(scene) {
 function gameOver() {
   removeTextMesh();
   createTextMesh("GameOver");
-  toggleCam = false;
+
   objSpeed = 0;
   const objetos = [
     ball,
@@ -1519,4 +1561,5 @@ function gameOver() {
   }
 
   playerMovement = false;
+  toggleCam = false;
 }
