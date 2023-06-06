@@ -173,8 +173,14 @@ function loadResources() {
 
     if (loadResources >= totalResources) {
       clearInterval(loadingInterval);
-      scene.remove(progressBar2);
-      scene.remove(progressBar);
+      updateScore();
+      camSetup();
+      scenarioSetup();
+      lightSetup();
+      toggleDay();
+      dayNightCycle();
+      animate();
+
     }
   }, 50);
 }
@@ -1377,17 +1383,13 @@ function animate() {
 }
 
 function start() {
-  //loadResources();
+  loadResources();
   score = 0;
   collision = true;
+  removeTextMesh();
   createTextMesh("Capi Rush");
-  updateScore();
-  camSetup();
-  scenarioSetup();
-  lightSetup();
-  toggleDay();
-  dayNightCycle();
-  animate();
+  
+  console.log("chamou");
 }
 
 start();
@@ -1406,14 +1408,18 @@ function createSkateWheel() {
 function createSkate() {
   const skate = new THREE.Group();
 
+  //load texture
+  const textureLoader = new THREE.TextureLoader();
+  const texture = textureLoader.load("./assets/textures/skate.jpg");
+
   const skateBase = new THREE.Mesh(
     new THREE.BoxGeometry(0.65, 0.05, 0.9),
-    new THREE.MeshPhongMaterial({ color: 0x68478d })
+    new THREE.MeshPhongMaterial({ map: texture })
   );
   skate.add(skateBase);
 
   const borderGeometry = new THREE.CylinderGeometry(0.325, 0.325, 0.05);
-  const borderMaterial = new THREE.MeshPhongMaterial({ color: 0x68478d });
+  const borderMaterial = new THREE.MeshPhongMaterial({ map: texture });
   const border1 = new THREE.Mesh(borderGeometry, borderMaterial);
   border1.position.set(0, 0, -0.4);
   const border2 = new THREE.Mesh(borderGeometry, borderMaterial);
@@ -1533,13 +1539,13 @@ function createCar(num) {
     case 0:
       main = new THREE.Mesh(
         new THREE.ExtrudeGeometry(shape, extrudeSettings),
-        new THREE.MeshPhongMaterial({ color: 0xff0000 })
+        new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load("./assets/textures/car_Red.jpg") })
       );
       break;
     case 1:
       main = new THREE.Mesh(
         new THREE.ExtrudeGeometry(shape, extrudeSettings),
-        new THREE.MeshPhongMaterial({ color: 0x00ff00 })
+        new THREE.MeshPhongMaterial({  map: new THREE.TextureLoader().load("./assets/textures/car_Green.jpg") })
       );
       break;
   }
@@ -1748,6 +1754,15 @@ function gameOver() {
 
   playerMovement = false;
   toggleCam = false;
+
+    //botão de Restart
+    const restartButton = document.createElement("button");
+    restartButton.textContent = "Restart";
+    restartButton.style.position = "absolute";
+    restartButton.style.display = "display";
+    restartButton.style.alignItems = "center";
+    restartButton.style.justifyContent = "center";
+    document.body.appendChild(restartButton);
 }
 
 // ------------------------------------
