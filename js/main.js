@@ -1784,15 +1784,6 @@ function gameOver() {
 
   playerMovement = false;
   toggleCam = false;
-
-    //botão de Restart
-    const restartButton = document.createElement("button");
-    restartButton.textContent = "Restart";
-    restartButton.style.position = "absolute";
-    restartButton.style.display = "display";
-    restartButton.style.alignItems = "center";
-    restartButton.style.justifyContent = "center";
-    document.body.appendChild(restartButton);
 }
 
 // ------------------------------------
