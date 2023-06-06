@@ -422,36 +422,46 @@ function lightSetup() {
 function toggleAmbientLight() {
   if (ambientLight.intensity == 0) {
     ambientLight.intensity = 0.075;
+    console.log("Ambient light on");
   } else {
     ambientLight.intensity = 0;
+    console.log("Ambient light off");
   }
 }
 function toggleDirectionalLight() {
   if (directionalLight.intensity == 0) {
     directionalLight.intensity = 0.25;
+    console.log("Directional light on");
   } else {
     directionalLight.intensity = 0;
+    console.log("Directional light off");
   }
 }
 function togglePointLight() {
   if (pointLight.intensity == 0) {
     pointLight.intensity = 1;
+    console.log("Point light on");
   } else {
     pointLight.intensity = 0;
+    console.log("Point light off");
   }
 }
 function toggleRedSpotlight() {
   if (spotLightRed.intensity == 0) {
     spotLightRed.intensity = 1;
+    console.log("Red spotlight on");
   } else {
     spotLightRed.intensity = 0;
+    console.log("Red spotlight off");
   }
 }
 function toggleGreenSpotlight() {
   if (spotLightGreen.intensity == 0) {
     spotLightGreen.intensity = 1;
+    console.log("Green spotlight on");
   } else {
     spotLightGreen.intensity = 0;
+    console.log("Green spotlight off");
   }
 }
 
@@ -569,7 +579,7 @@ scene.add(skate);
 
 // Player Movement --------------------
 
-var movementSpeed = 0.05;
+var movementSpeed = 0.03;
 var moveLeft = false;
 var moveRight = false;
 var targetX = 0;
@@ -1201,7 +1211,7 @@ function checkPlayerCollision(playerPosition) {
     audio_point.play();
     score += 1;
     point.position.z = 10;
-    if (score % 5 == 0) {
+    if (score % 5 == 0 && score != 0) {
       objSpeed += 0.01;
     }
     updateScore();
@@ -1242,7 +1252,7 @@ function turnDay() {
     setTimeout(function () {
       ambientLight.intensity += ambientStep;
       directionalLight.intensity += directionalStep;
-    }, 10000);
+    }, 5000);
   }
   toggleDay();
 }
@@ -1261,8 +1271,8 @@ function turnNight() {
     setTimeout(function () {
       ambientLight.intensity -= ambientStep;
       directionalLight.intensity -= directionalStep;
-      pointLight.intensity -= pointStep;
-    }, 10000);
+      pointLight.intensity -= 0.1;
+    }, 5000);
   }
   toggleNight();
 }
@@ -1338,7 +1348,7 @@ var amanhecerBt = {
 dayFolder.add(amanhecerBt, "add").name("Amanhecer");
 var dayLight = {
   add: function () {
-    toggleDayLight();
+    toggleDay();
   },
 };
 dayFolder.add(dayLight, "add").name("Dia");
