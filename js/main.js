@@ -29,24 +29,28 @@ INDEX   //------------------------------------
     | Lines 041-052
     | Here we setup and handle the cameras for the game.
 
-6.  Scenario   //-----------------------------
+6.  Render Setting   //-----------------------
+    | Lines 041-052
+    | Here we setup the render settings for the game.
+
+7.  Scenario   //-----------------------------
     | Lines 041-052
     | Here we setup the scenario for the game.
     | This includes the skybox, the road and the walkway.
 
-7.  Lights   //-------------------------------
+8.  Lights   //-------------------------------
     | Lines 041-052
     | Here we setup the lights for the game.
 
-8.  Text Mesh   //----------------------------
+9.  Text Mesh   //----------------------------
     | Lines 041-052
     | Here we setup the text mesh for the game.
 
-9.  Audio   //--------------------------------
+10. Audio   //--------------------------------
     | Lines 041-052
     | Here we setup the audio for the game.
 
-10. Add Player   //---------------------------
+11. Add Player   //---------------------------
     | Lines 041-052
     | Here we setup the player for the game.
     | Starting up the capybara model and the skateboard model.
@@ -132,9 +136,6 @@ const scene = new THREE.Scene();
 const render = new THREE.WebGLRenderer({
   canvas: document.querySelector("#bg"),
 });
-render.setPixelRatio(window.devicePixelRatio);
-render.setSize(window.innerWidth, window.innerHeight);
-render.render(scene, camera);
 
 // ------------------------------------
 
@@ -176,8 +177,6 @@ function loadResources() {
       scene.remove(progressBar);
     }
   }, 50);
-
-  return true;
 }
 
 // ------------------------------------
@@ -256,6 +255,14 @@ window.addEventListener("keydown", (event) => {
       break;
   }
 });
+
+// ------------------------------------
+
+// Render Setting ---------------------
+
+render.setPixelRatio(window.devicePixelRatio);
+render.setSize(window.innerWidth, window.innerHeight);
+render.render(scene, camera);
 
 // ------------------------------------
 
@@ -1370,7 +1377,7 @@ function animate() {
 }
 
 function start() {
-  loadResources();
+  //loadResources();
   score = 0;
   collision = true;
   createTextMesh("Capi Rush");
