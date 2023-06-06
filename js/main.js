@@ -10,106 +10,106 @@
 
 INDEX   //------------------------------------
 1.  Imports   //------------------------------
-    | Lines 041-052
+    | Lines 118-128
     | This is where we import all the libraries we need for the project.
 
 2.  Init Setup   //---------------------------
-    | Lines 041-052
+    | Lines 131-140
     | This is where we setup the initial some variables for the project.
 
 3.  Loading   //------------------------------
-    | Lines 041-052
+    | Lines 142-188
     | This is where we setup the loading screen for the game.
 
 4.  Resize Handler   //-----------------------
-    | Lines 041-052
+    | Lines 190-211
     | Here we make the renderer responsive to the window size.
 
 5.  Camera Setup   //-------------------------
-    | Lines 041-052
+    | Lines 213-265
     | Here we setup and handle the cameras for the game.
 
 6.  Render Setting   //-----------------------
-    | Lines 041-052
+    | Lines 267-273
     | Here we setup the render settings for the game.
 
 7.  Scenario   //-----------------------------
-    | Lines 041-052
+    | Lines 275-371
     | Here we setup the scenario for the game.
     | This includes the skybox, the road and the walkway.
 
 8.  Lights   //-------------------------------
-    | Lines 041-052
+    | Lines 373-488
     | Here we setup the lights for the game.
 
 9.  Text Mesh   //----------------------------
-    | Lines 041-052
+    | Lines 490-523
     | Here we setup the text mesh for the game.
 
 10. Audio   //--------------------------------
-    | Lines 041-052
+    | Lines 525-552
     | Here we setup the audio for the game.
 
 11. Add Player   //---------------------------
-    | Lines 041-052
+    | Lines 554-578
     | Here we setup the player for the game.
     | Starting up the capybara model and the skateboard model.
 
 12. Player Movement   //----------------------
-    | Lines 041-052
+    | Lines 580-736
     | Here we setup the player movement for the game.
 
 13. Point   //--------------------------------
-    | Lines 041-052
+    | Lines 738-763
     | Here we setup the points for the game.
 
 14. Add Obstacles   //------------------------
-    | Lines 041-052
+    | Lines 765-853
     | Here we add the obstacles for the game.
     | This includes the cars, the ball and tire.
 
 15. Obstacles Moving   //---------------------
-    | Lines 041-052
+    | Lines 855-1077
     | Here we handle the obstacles movement for the game.
     | We make them move and rotate along the road.
     | And we also make them respawn randomly.
 
 16. Add Objects   //--------------------------
-    | Lines 041-052
+    | Lines 1079-1103
     | Here we add the objects of the walkway.
 
 17. Out Obj Moving   //-----------------------
-    | Lines 041-052
+    | Lines 1105-1180
     | Here we handle the movement of the objects of the walkway.
     | We make them move along the walkway and make them respawn randomly.
 
 18. Check Collisions   //---------------------
-    | Lines 041-052
+    | Lines 1182-1242
     | Here we check the collisions for the game.
     | We check if the player collides with the obstacles.
     | We check if the obstacles collide with each other.
 
 19. Day/Night Cycle   //----------------------
-    | Lines 041-052
+    | Lines 1244-1298
     | Here we setup the day/night cycle for the game.
     | Handling the lights intensity and the timing.
 
 20. GUI   //----------------------------------
-    | Lines 041-052
+    | Lines 1300-1396
     | Here we setup the GUI for the game.
     | Adding controls for the lights, cameras, day/night and collisions.
 
 21. Boot + Game Loop   //---------------------
-    | Lines 041-052
+    | Lines 1398-1426
     | Here we call the functions required for the game to start up 
     | and the game loop to run.
 
 22. Create Functions   //---------------------
-    | Lines 041-052
+    | Lines 1428-1748
     | Here we have the functions that create the objects of the game.
 
 23. Gameover   //-----------------------------
-    | Lines 041-052
+    | Lines 1750-1789
     | Here we setup the gameover screen for the game.
 
 ------------------------------------------------------------------
