@@ -1103,7 +1103,7 @@ scene.add(bush);
 // ------------------------------------
 
 // Out Obj Moving ---------------------
-var objSpeed = 0.03;
+var objSpeed = 0.015;
 var randomPos;
 
 function posOutObj(outObj) {
@@ -1298,6 +1298,21 @@ function dayNightCycle() {
 // ------------------------------------
 
 // GUI --------------------------------
+var pause = false;
+var oldObjSpeed = objSpeed;
+function togglePause() {
+  if(pause){
+    objSpeed = oldObjSpeed;
+    pause = false;
+    console.log("pause: " + pause);
+    
+  } else {
+    oldObjSpeed = objSpeed;
+    objSpeed = 0;
+    pause = true;
+    console.log("pause: " + pause);
+  }
+}
 
 const lightFolder = gui.addFolder("Luzes");
 var ambLightBt = {
@@ -1372,6 +1387,12 @@ var collBt = {
   },
 };
 gameFolder.add(collBt, "add").name("Collision");
+var pause = {
+  add: function () {
+    togglePause();
+  },
+}
+gameFolder.add(pause, "add").name("Pause");
 // ------------------------------------~
 
 // Boot + Game Loop -------------------
@@ -1397,8 +1418,7 @@ function start() {
   score = 0;
   collision = true;
   removeTextMesh();
-  createTextMesh("Capi Rush");
-  
+  createTextMesh("Capi Rush");  
   console.log("chamou");
 }
 
